@@ -3,7 +3,7 @@ from json.decoder import JSONDecodeError
 
 import jwt
 import requests
-from flask import request, jsonify
+from flask import request, jsonify, current_app
 from jwt import InvalidSignatureError, DecodeError, InvalidAudienceError
 from requests.exceptions import ConnectionError, InvalidURL, HTTPError
 
@@ -27,10 +27,6 @@ WRONG_JWKS_HOST = ('Wrong jwks_host in JWT payload. Make sure domain follows '
 def get_public_key(jwks_host, token):
     """
     Get public key by requesting it from specified jwks host.
-
-    NOTE. This function is just an example of how one can read and check
-    anything before passing to an API endpoint, and thus it may be modified in
-    any way, replaced by another function, or even removed from the module.
     """
 
     expected_errors = (
@@ -61,10 +57,6 @@ def get_public_key(jwks_host, token):
 def get_auth_token():
     """
     Parse and validate incoming request Authorization header.
-
-    NOTE. This function is just an example of how one can read and check
-    anything before passing to an API endpoint, and thus it may be modified in
-    any way, replaced by another function, or even removed from the module.
     """
     expected_errors = {
         KeyError: NO_AUTH_HEADER,
@@ -78,19 +70,15 @@ def get_auth_token():
         raise AuthorizationError(expected_errors[error.__class__])
 
 
-def get_jwt():
+def get_credentials():
     """
     Get Authorization token and validate its signature
     against the public key from /.well-known/jwks endpoint.
-
-    NOTE. This function is just an example of how one can read and check
-    anything before passing to an API endpoint, and thus it may be modified in
-    any way, replaced by another function, or even removed from the module.
     """
 
     expected_errors = {
-        KeyError: WRONG_PAYLOAD_STRUCTURE,
-        AssertionError: JWKS_HOST_MISSING,
+        KeyError: JWKS_HOST_MISSING,
+        AssertionError: WRONG_PAYLOAD_STRUCTURE,
         InvalidSignatureError: WRONG_KEY,
         DecodeError: WRONG_JWT_STRUCTURE,
         InvalidAudienceError: WRONG_AUDIENCE,
@@ -98,15 +86,17 @@ def get_jwt():
     }
     token = get_auth_token()
     try:
-        jwks_payload = jwt.decode(token, options={'verify_signature': False})
-        assert 'jwks_host' in jwks_payload
-        jwks_host = jwks_payload.get('jwks_host')
+        jwks_host = jwt.decode(
+            token, options={'verify_signature': False}
+        )['jwks_host']
         key = get_public_key(jwks_host, token)
         aud = request.url_root
         payload = jwt.decode(
             token, key=key, algorithms=['RS256'], audience=[aud.rstrip('/')]
         )
-        return payload['key']
+        assert payload.get('accessId')
+        assert payload.get('accessKey')
+        return payload
     except tuple(expected_errors) as error:
         message = expected_errors[error.__class__]
         raise AuthorizationError(message)
@@ -116,10 +106,6 @@ def get_json(schema):
     """
     Parse the incoming request's data as JSON.
     Validate it against the specified schema.
-
-    NOTE. This function is just an example of how one can read and check
-    anything before passing to an API endpoint, and thus it may be modified in
-    any way, replaced by another function, or even removed from the module.
     """
 
     data = request.get_json(force=True, silent=True, cache=False)
@@ -138,3 +124,12 @@ def jsonify_data(data):
 
 def jsonify_errors(data):
     return jsonify({'errors': [data]})
+
+
+def set_ctr_entities_limit(payload):
+    try:
+        ctr_entities_limit = int(payload['CTR_ENTITIES_LIMIT'])
+        assert ctr_entities_limit > 0
+    except (KeyError, ValueError, AssertionError):
+        ctr_entities_limit = current_app.config['CTR_DEFAULT_ENTITIES_LIMIT']
+    current_app.config['CTR_ENTITIES_LIMIT'] = ctr_entities_limit
