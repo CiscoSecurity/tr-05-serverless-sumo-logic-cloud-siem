@@ -36,7 +36,7 @@ class SumoLogicCloudSIEMClient:
                 self._credentials.get('access_key'))
 
     def health(self):
-        return self._request(path='users/current')
+        return self._request(path='signals/all')
 
     def _request(self, path, method="GET", body=None, params=None):
         url = '/'.join([self._url, path.lstrip('/')])

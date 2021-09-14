@@ -22,8 +22,8 @@ def client():
 @fixture(scope='session')
 def valid_jwt(client):
     def _make_jwt(
-            accessId='some_id',
-            accessKey='some_key',
+            access_id='some_id',
+            access_key='some_key',
             host='api.us2.sumologic.com',
             jwks_host='visibility.amp.cisco.com',
             aud='http://localhost',
@@ -32,8 +32,8 @@ def valid_jwt(client):
             wrong_jwks_host=False
     ):
         payload = {
-            'accessId': accessId,
-            'accessKey': accessKey,
+            'access_id': access_id,
+            'access_key': access_key,
             'host': host,
             'jwks_host': jwks_host,
             'aud': aud,
@@ -43,7 +43,7 @@ def valid_jwt(client):
             payload.pop('jwks_host')
 
         if wrong_structure:
-            payload.pop('accessKey')
+            payload.pop('access_key')
 
         return jwt.encode(
             payload, client.application.rsa_private_key, algorithm='RS256',
