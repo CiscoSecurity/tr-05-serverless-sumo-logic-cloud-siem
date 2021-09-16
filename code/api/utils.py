@@ -94,8 +94,9 @@ def get_credentials():
         payload = jwt.decode(
             token, key=key, algorithms=['RS256'], audience=[aud.rstrip('/')]
         )
-        assert payload.get('access_id')
-        assert payload.get('access_key')
+        assert 'host' in payload
+        assert 'access_id' in payload
+        assert 'access_key' in payload
         return payload
     except tuple(expected_errors) as error:
         message = expected_errors[error.__class__]
