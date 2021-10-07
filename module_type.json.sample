@@ -39,10 +39,6 @@
     {
       "id": "respond",
       "description": "Response actions"
-    },
-    {
-      "id": "tiles",
-      "description": "Dashboard tiles"
     }
   ],
   "properties": {
@@ -52,10 +48,7 @@
       "deliberate/observables",
       "refer/observables",
       "respond/observables",
-      "respond/trigger",
-      "tiles",
-      "tiles/tile",
-      "tiles/tile-data"
+      "respond/trigger"
     ],
     "auth-type": "configuration-token",
     "configuration-token-alg": "RS256",

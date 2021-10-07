@@ -27,9 +27,6 @@ def routes():
     yield '/deliberate/observables'
     yield '/observe/observables'
     yield '/refer/observables'
-    yield '/tiles'
-    yield '/tiles/tile'
-    yield '/tiles/tile-data'
 
 
 @fixture(scope='module', params=routes(), ids=lambda route: f'POST {route}')
