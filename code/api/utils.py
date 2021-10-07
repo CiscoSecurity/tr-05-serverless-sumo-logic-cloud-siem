@@ -97,6 +97,9 @@ def get_credentials():
         assert 'host' in payload
         assert 'access_id' in payload
         assert 'access_key' in payload
+
+        set_ctr_entities_limit(payload)
+
         return payload
     except tuple(expected_errors) as error:
         message = expected_errors[error.__class__]

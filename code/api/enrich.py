@@ -1,9 +1,10 @@
 from functools import partial
 
-from flask import Blueprint
+from flask import Blueprint, g
 
 from api.schemas import ObservableSchema
 from api.utils import get_json, get_credentials, jsonify_data
+from api.client import SumoLogicCloudSIEMClient
 
 enrich_api = Blueprint('enrich', __name__)
 
@@ -19,8 +20,15 @@ def deliberate_observables():
 
 @enrich_api.route('/observe/observables', methods=['POST'])
 def observe_observables():
-    _ = get_credentials()
-    _ = get_observables()
+    key = get_credentials()
+    observables = get_observables()
+    client = SumoLogicCloudSIEMClient(key)
+
+    g.sightings = []
+
+    for observable in observables:
+        insights = client.get_insights(observable['value'])
+
     return jsonify_data({})
 
 
