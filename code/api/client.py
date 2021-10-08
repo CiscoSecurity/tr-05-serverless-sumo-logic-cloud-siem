@@ -49,8 +49,12 @@ class SumoLogicCloudSIEMClient:
         except SSLError as error:
             raise CloudSIEMSSLError(error)
         except UnicodeError:
+            """We receive this exception when user 
+            inputs cyrillic in credentials"""
             raise CriticalCloudSIEMResponseError(HTTPStatus.UNAUTHORIZED)
         except (ConnectionError, MissingSchema, InvalidSchema, InvalidURL):
+            """We receive IncalidURL exception when user 
+            leaves host value empty"""
             raise CloudSIEMConnectionError(self._url(api_path))
 
         if response.ok:
