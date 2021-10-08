@@ -1,5 +1,5 @@
 import requests
-from flask import current_app
+from flask import current_app, g
 from requests.exceptions import (
     ConnectionError,
     MissingSchema,
@@ -15,11 +15,16 @@ from api.errors import (
     CloudSIEMSSLError
 )
 from api.utils import add_error
-from api.errors import MoreInsightsAvailableWarning
+from api.errors import (
+    MoreInsightsAvailableWarning,
+    MoreSignalsAvailableWarning
+)
 
 
 INVALID_CREDENTIALS = 'wrong access_id or access_key'
-DEFAULT_LIMIT = 10
+
+INSIGHTS_DEFAULT_LIMIT = 10
+SIGNALS_DEFAULT_LIMIT = 100
 
 
 class SumoLogicCloudSIEMClient:
@@ -43,8 +48,9 @@ class SumoLogicCloudSIEMClient:
 
     @property
     def _limit(self):
-        return self._ctr_limit if self._ctr_limit <= DEFAULT_LIMIT \
-            else DEFAULT_LIMIT
+        return self._ctr_limit if \
+            self._ctr_limit <= INSIGHTS_DEFAULT_LIMIT else \
+            INSIGHTS_DEFAULT_LIMIT
 
     def _request(self, path, method='GET', body=None, params=None,
                  api_path='api/sec/v1'):
@@ -75,7 +81,17 @@ class SumoLogicCloudSIEMClient:
         response = self._request(path='insights', params=params)
         data = response['data']
 
-        if data['total'] > DEFAULT_LIMIT:
+        if data['total'] > INSIGHTS_DEFAULT_LIMIT:
             add_error(MoreInsightsAvailableWarning(observable))
+
+        return data['objects']
+
+    def get_signals(self, observable):
+        params = {'q': observable, 'limit': self._limit - len(g.sightings)}
+        response = self._request(path='signals', params=params)
+        data = response['data']
+
+        if data['total'] > SIGNALS_DEFAULT_LIMIT:
+            add_error(MoreSignalsAvailableWarning(observable))
 
         return data['objects']
