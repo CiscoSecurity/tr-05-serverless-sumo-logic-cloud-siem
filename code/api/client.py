@@ -22,6 +22,7 @@ from api.errors import (
 
 
 INVALID_CREDENTIALS = 'wrong access_id or access_key'
+DEFAULT_LIMIT = 10
 
 INSIGHTS_DEFAULT_LIMIT = 10
 SIGNALS_DEFAULT_LIMIT = 100
@@ -51,6 +52,7 @@ class SumoLogicCloudSIEMClient:
         return self._ctr_limit if \
             self._ctr_limit <= INSIGHTS_DEFAULT_LIMIT else \
             INSIGHTS_DEFAULT_LIMIT
+
 
     def _request(self, path, method='GET', body=None, params=None,
                  api_path='api/sec/v1'):

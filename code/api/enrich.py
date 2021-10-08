@@ -12,6 +12,7 @@ from api.utils import (
 from api.client import SumoLogicCloudSIEMClient
 from api.mapping import InsightSighting
 
+
 enrich_api = Blueprint('enrich', __name__)
 
 get_observables = partial(get_json, schema=ObservableSchema(many=True))
@@ -24,6 +25,7 @@ def observe_observables():
     client = SumoLogicCloudSIEMClient(key)
 
     insight_sighting_map = InsightSighting()
+
 
     g.sightings = []
 

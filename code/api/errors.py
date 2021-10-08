@@ -77,9 +77,9 @@ class MoreInsightsAvailableWarning(TRFormattedError):
     def __init__(self, obs_value):
         super().__init__(
             'too-many-messages-warning',
-            (f'More than 10 Insights found in Sumo Logic Cloud SIEM '
+            ('More than 10 Insights found in Sumo Logic Cloud SIEM '
              f'Enterprise for {obs_value}. Log in to the Sumo Logic '
-             f'Cloud SIEM Enterprise console to see all Insights'),
+             'Cloud SIEM Enterprise console to see all Insights'),
             type_='warning'
         )
 
@@ -88,8 +88,8 @@ class MoreSignalsAvailableWarning(TRFormattedError):
     def __init__(self, obs_value):
         super().__init__(
             'too-many-messages-warning',
-            (f"More Signals found in Sumo Logic Cloud SIEM Enterprise "
+            ("More Signals found in Sumo Logic Cloud SIEM Enterprise "
              f"for {obs_value} than can be rendered. Log in to the "
-             f"Sumo Logic Cloud SIEM Enterprise console to see all Signals"),
+             "Sumo Logic Cloud SIEM Enterprise console to see all Signals"),
             type_='warning'
         )
