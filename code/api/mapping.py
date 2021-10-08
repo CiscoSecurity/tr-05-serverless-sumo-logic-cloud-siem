@@ -36,7 +36,7 @@ SIGHTING_DEFAULTS = {
 }
 
 
-class SightingOfInsight:
+class InsightSighting:
 
     @staticmethod
     def _transient_id(insight, value) -> str:
