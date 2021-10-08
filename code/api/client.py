@@ -41,6 +41,7 @@ class SumoLogicCloudSIEMClient:
 
     @property
     def _limit(self):
+        # limits logic will probably be changed after Michael's clarifications
         return self._ctr_limit if self._ctr_limit <= DEFAULT_LIMIT \
             else DEFAULT_LIMIT
 
@@ -66,7 +67,7 @@ class SumoLogicCloudSIEMClient:
         return self._request(path='signals/all')
 
     def get_insights(self, observable, offset=0):
-        params = dict(q=observable, limit=self._limit, offset=offset)
+        params = {'q': observable, 'limit': self._limit, 'offset': offset}
         response = self._request(path='insights', params=params)
         data = response['data']
 

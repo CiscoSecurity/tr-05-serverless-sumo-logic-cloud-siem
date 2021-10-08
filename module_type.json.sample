@@ -40,7 +40,7 @@
     {
       "id": "health",
       "description": "Healthcheck"
-    }
+    },
     {
       "id": "observe",
       "description": "Enrichments"

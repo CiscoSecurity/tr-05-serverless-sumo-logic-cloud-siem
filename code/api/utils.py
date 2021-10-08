@@ -3,7 +3,7 @@ from json.decoder import JSONDecodeError
 
 import jwt
 import requests
-from flask import request, jsonify, current_app
+from flask import request, jsonify, current_app, g
 from jwt import InvalidSignatureError, DecodeError, InvalidAudienceError
 from requests.exceptions import ConnectionError, InvalidURL, HTTPError
 
@@ -99,7 +99,7 @@ def get_credentials():
         assert 'access_key' in payload
 
         set_ctr_entities_limit(payload)
-
+        current_app.config['HOST'] = payload['host']
         return payload
     except tuple(expected_errors) as error:
         message = expected_errors[error.__class__]
@@ -128,6 +128,24 @@ def jsonify_data(data):
 
 def jsonify_errors(data):
     return jsonify({'errors': [data]})
+
+
+def format_docs(docs):
+    return {'count': len(docs), 'docs': docs}
+
+
+def jsonify_result():
+    result = {'data': {}}
+
+    if g.get('sightings'):
+        result['data']['sightings'] = format_docs(g.sightings)
+
+    if g.get('errors'):
+        result['errors'] = g.errors
+        if not result['data']:
+            del result['data']
+
+    return jsonify(result)
 
 
 def set_ctr_entities_limit(payload):
