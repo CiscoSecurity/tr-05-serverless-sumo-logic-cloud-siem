@@ -5,7 +5,11 @@ from pytest import fixture
 
 from tests.unit.api.utils import get_headers
 from tests.unit.conftest import mock_api_response
-from tests.unit.payloads_for_tests import EXPECTED_RESPONSE_OF_JWKS_ENDPOINT
+from tests.unit.payloads_for_tests import (
+    EXPECTED_RESPONSE_OF_JWKS_ENDPOINT,
+    OBSERVE_OBSERVABLES_RESPONSE,
+    INSIGHTS
+)
 
 
 def routes():
@@ -46,10 +50,14 @@ def valid_json():
 
 
 @patch('requests.get')
-def test_enrich_call_success(mock_request,
+@patch('api.client.SumoLogicCloudSIEMClient.get_insights')
+def test_enrich_call_success(mock_data, mock_request,
                              route, client, valid_jwt, valid_json):
     mock_request.return_value = \
         mock_api_response(payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT)
+    mock_data.return_value = INSIGHTS
     response = client.post(route, headers=get_headers(valid_jwt()),
                            json=valid_json)
     assert response.status_code == HTTPStatus.OK
+    if route == "/observe/observables":
+        assert response.json == OBSERVE_OBSERVABLES_RESPONSE
