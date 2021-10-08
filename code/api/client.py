@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import requests
 from flask import current_app
 from requests.exceptions import (
@@ -14,8 +16,6 @@ from api.errors import (
     CriticalCloudSIEMResponseError,
     CloudSIEMSSLError
 )
-
-INVALID_CREDENTIALS = 'wrong access_id or access_key'
 
 
 class SumoLogicCloudSIEMClient:
@@ -50,11 +50,11 @@ class SumoLogicCloudSIEMClient:
         except SSLError as error:
             raise CloudSIEMSSLError(error)
         except UnicodeError:
-            raise AuthorizationError(INVALID_CREDENTIALS)
+            raise CriticalCloudSIEMResponseError(HTTPStatus.UNAUTHORIZED)
         except (ConnectionError, MissingSchema, InvalidSchema, InvalidURL):
             raise CloudSIEMConnectionError(self._url(api_path))
 
         if response.ok:
             return response.json()
 
-        raise CriticalCloudSIEMResponseError(response)
+        raise CriticalCloudSIEMResponseError(response.status_code, response.text, url)
