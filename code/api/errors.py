@@ -77,8 +77,8 @@ class MoreInsightsAvailableWarning(TRFormattedError):
     def __init__(self, obs_value):
         super().__init__(
             'too-many-messages-warning',
-            (f'More than 10 Insights found in Sumo Logic Cloud SIEM '
+            ('More than 10 Insights found in Sumo Logic Cloud SIEM '
              f'Enterprise for {obs_value}. Log in to the Sumo Logic '
-             f'Cloud SIEM Enterprise console to see all Insights'),
+             'Cloud SIEM Enterprise console to see all Insights'),
             type_='warning'
         )
