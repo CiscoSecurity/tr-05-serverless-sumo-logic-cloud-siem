@@ -30,7 +30,6 @@ class SumoLogicCloudSIEMClient:
             'User-Agent': current_app.config['USER_AGENT']
         }
         self._ctr_limit = current_app.config['CTR_ENTITIES_LIMIT']
-        self._insights = []
 
     def _url(self, api_path):
         url = current_app.config['CLOUD_SIEM_API_ENDPOINT']
