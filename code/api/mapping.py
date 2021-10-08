@@ -31,7 +31,7 @@ SIGHTING_DEFAULTS = {
     "title": TITLE,
     "count": COUNT,
     "source": SOURCE,
-    "internal": True,
+    "internal": INTERNAL,
     "confidence": CONFIDENCE,
 }
 
