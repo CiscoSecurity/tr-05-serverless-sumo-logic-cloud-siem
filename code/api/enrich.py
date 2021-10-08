@@ -1,27 +1,41 @@
 from functools import partial
 
-from flask import Blueprint
+from flask import Blueprint, g
 
 from api.schemas import ObservableSchema
-from api.utils import get_json, get_credentials, jsonify_data
+from api.utils import (
+    get_json,
+    get_credentials,
+    jsonify_data,
+    jsonify_result
+)
+from api.client import SumoLogicCloudSIEMClient
+from api.mapping import SightingOfInsight
 
 enrich_api = Blueprint('enrich', __name__)
 
 get_observables = partial(get_json, schema=ObservableSchema(many=True))
 
 
-@enrich_api.route('/deliberate/observables', methods=['POST'])
-def deliberate_observables():
-    _ = get_credentials()
-    _ = get_observables()
-    return jsonify_data({})
-
-
 @enrich_api.route('/observe/observables', methods=['POST'])
 def observe_observables():
-    _ = get_credentials()
-    _ = get_observables()
-    return jsonify_data({})
+    key = get_credentials()
+    observables = get_observables()
+    client = SumoLogicCloudSIEMClient(key)
+
+    insight_sighting_map = SightingOfInsight()
+
+    g.sightings = []
+
+    for observable in observables:
+        insights = client.get_insights(observable['value'])
+        for insight in insights:
+
+            insight_sighting = \
+                insight_sighting_map.extract(insight, observable)
+            g.sightings.append(insight_sighting)
+
+    return jsonify_result()
 
 
 @enrich_api.route('/refer/observables', methods=['POST'])
