@@ -126,8 +126,8 @@ def jsonify_data(data):
     return jsonify({'data': data})
 
 
-def jsonify_errors(data):
-    return jsonify({'errors': [data]})
+def add_error(error):
+    g.errors = [*g.get('errors', []), error.json]
 
 
 def format_docs(docs):
@@ -142,8 +142,9 @@ def jsonify_result():
 
     if g.get('errors'):
         result['errors'] = g.errors
-        if not result['data']:
-            del result['data']
+
+        if not result.get('data'):
+            result.pop('data', None)
 
     return jsonify(result)
 

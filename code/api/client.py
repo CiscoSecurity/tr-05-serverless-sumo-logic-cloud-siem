@@ -14,6 +14,9 @@ from api.errors import (
     CriticalCloudSIEMResponseError,
     CloudSIEMSSLError
 )
+from api.utils import add_error
+from api.errors import MoreInsightsAvailableWarning
+
 
 INVALID_CREDENTIALS = 'wrong access_id or access_key'
 DEFAULT_LIMIT = 10
@@ -41,7 +44,6 @@ class SumoLogicCloudSIEMClient:
 
     @property
     def _limit(self):
-        # limits logic will probably be changed after Michael's clarifications
         return self._ctr_limit if self._ctr_limit <= DEFAULT_LIMIT \
             else DEFAULT_LIMIT
 
@@ -69,14 +71,12 @@ class SumoLogicCloudSIEMClient:
                              params={'limit': 1},
                              api_path='api/v1')
 
-    def get_insights(self, observable, offset=0):
-        params = {'q': observable, 'limit': self._limit, 'offset': offset}
+    def get_insights(self, observable):
+        params = {'q': observable, 'limit': self._limit}
         response = self._request(path='insights', params=params)
         data = response['data']
 
-        self._insights.extend(data['objects'])
+        if data['total'] > DEFAULT_LIMIT:
+            add_error(MoreInsightsAvailableWarning(observable))
 
-        if data['hasNextPage'] and len(self._insights) < self._ctr_limit:
-            self.get_insights(observable, offset+self._limit)
-
-        return self._insights
+        return data['objects']
