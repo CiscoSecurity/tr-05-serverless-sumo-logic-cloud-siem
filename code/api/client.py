@@ -11,7 +11,6 @@ from requests.exceptions import (
 )
 
 from api.errors import (
-    AuthorizationError,
     CloudSIEMConnectionError,
     CriticalCloudSIEMResponseError,
     CloudSIEMSSLError
@@ -57,4 +56,6 @@ class SumoLogicCloudSIEMClient:
         if response.ok:
             return response.json()
 
-        raise CriticalCloudSIEMResponseError(response.status_code, response.text, url)
+        raise CriticalCloudSIEMResponseError(response.status_code,
+                                             response.text,
+                                             url)

@@ -77,5 +77,6 @@ class CriticalCloudSIEMResponseError(TRFormattedError):
         status_code_map = defaultdict(lambda: response_text, status_code_map)
         super().__init__(
             HTTPStatus(status_code).phrase,
-            f'Unexpected response from Sumo Logic Cloud SIEM: {status_code_map[status_code]}'
+            'Unexpected response from Sumo Logic Cloud SIEM: '
+            f'{status_code_map[status_code]}'
         )
