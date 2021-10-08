@@ -115,7 +115,7 @@ def connection_error_expected_relay_response():
                     'message':
                         'Unable to connect to Sumo Logic Cloud SIEM, '
                         'validate the configured API endpoint: '
-                        'https://api.us2.sumologic.com/api/sec/v1',
+                        'https://api.us2.sumologic.com/api/v1',
                     'type': 'fatal'
                 }
             ]
