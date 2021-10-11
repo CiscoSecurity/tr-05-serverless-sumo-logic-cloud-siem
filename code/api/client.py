@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 import requests
-from flask import current_app
+from flask import current_app, g
 from requests.exceptions import (
     ConnectionError,
     MissingSchema,
@@ -16,10 +16,14 @@ from api.errors import (
     CloudSIEMSSLError
 )
 from api.utils import add_error
-from api.errors import MoreInsightsAvailableWarning
+from api.errors import (
+    MoreInsightsAvailableWarning,
+    MoreSignalsAvailableWarning
+)
 
 
-DEFAULT_LIMIT = 10
+INVALID_CREDENTIALS = 'wrong access_id or access_key'
+SIGNALS_DEFAULT_LIMIT = 100
 
 
 class SumoLogicCloudSIEMClient:
@@ -29,7 +33,10 @@ class SumoLogicCloudSIEMClient:
         self._headers = {
             'User-Agent': current_app.config['USER_AGENT']
         }
-        self._ctr_limit = current_app.config['CTR_ENTITIES_LIMIT']
+        self.ctr_limit = \
+            current_app.config['CTR_ENTITIES_LIMIT']
+        self.default_ctr_limit = \
+            current_app.config['CTR_DEFAULT_ENTITIES_LIMIT']
 
     def _url(self, api_path):
         url = current_app.config['CLOUD_SIEM_API_ENDPOINT']
@@ -40,11 +47,6 @@ class SumoLogicCloudSIEMClient:
     def _auth(self):
         return (self._credentials.get('access_id'),
                 self._credentials.get('access_key'))
-
-    @property
-    def _limit(self):
-        return self._ctr_limit if self._ctr_limit <= DEFAULT_LIMIT \
-            else DEFAULT_LIMIT
 
     def _request(self, path, method='GET', body=None, params=None,
                  api_path='api/sec/v1'):
@@ -77,11 +79,27 @@ class SumoLogicCloudSIEMClient:
                              api_path='api/v1')
 
     def get_insights(self, observable):
-        params = {'q': observable, 'limit': self._limit}
+        limit = 10
+        if self.ctr_limit <= limit:
+            limit = self.ctr_limit
+
+        params = {'q': observable, 'limit': limit}
         response = self._request(path='insights', params=params)
         data = response['data']
 
-        if data['total'] > DEFAULT_LIMIT:
+        if data['total'] > limit:
             add_error(MoreInsightsAvailableWarning(observable))
+
+        return data['objects']
+
+    def get_signals(self, observable):
+        limit = self.ctr_limit - len(g.sightings)
+
+        params = {'q': observable, 'limit': limit}
+        response = self._request(path='signals', params=params)
+        data = response['data']
+
+        if data['total'] > self.default_ctr_limit:
+            add_error(MoreSignalsAvailableWarning(observable))
 
         return data['objects']

@@ -10,7 +10,11 @@ from api.utils import (
     jsonify_result
 )
 from api.client import SumoLogicCloudSIEMClient
-from api.mapping import SightingOfInsight, Indicator
+from api.mapping import (
+    InsightSighting,
+    SignalSighting,
+    Indicator
+)
 
 enrich_api = Blueprint('enrich', __name__)
 
@@ -23,7 +27,8 @@ def observe_observables():
     observables = get_observables()
     client = SumoLogicCloudSIEMClient(key)
 
-    insight_sighting_map = SightingOfInsight()
+    insight_sighting_map = InsightSighting()
+    signal_sighting_map = SignalSighting()
     indicator_map = Indicator()
 
     g.sightings = []
@@ -38,9 +43,27 @@ def observe_observables():
             g.sightings.append(insight_sighting)
 
             for signal in insight.get('signals'):
+
                 indicator = indicator_map.extract(signal)
                 if indicator not in g.indicators:
                     g.indicators.append(indicator)
+
+        for insight in insights:
+            for signal in insight.get('signals'):
+                if len(g.sightings) < client.ctr_limit:
+                    signal_sighting = \
+                        signal_sighting_map.extract(signal, observable,
+                                                    insight)
+                    if signal_sighting not in g.sightings:
+                        g.sightings.append(signal_sighting)
+
+        signals = client.get_signals(observable['value'])
+        for signal in signals:
+
+            signal_sighting = \
+                signal_sighting_map.extract(signal, observable)
+            if signal_sighting not in g.sightings:
+                g.sightings.append(signal_sighting)
 
     return jsonify_result()
 

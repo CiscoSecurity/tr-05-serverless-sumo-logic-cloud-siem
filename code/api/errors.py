@@ -91,3 +91,14 @@ class MoreInsightsAvailableWarning(TRFormattedError):
              'Cloud SIEM Enterprise console to see all Insights'),
             type_='warning'
         )
+
+
+class MoreSignalsAvailableWarning(TRFormattedError):
+    def __init__(self, obs_value):
+        super().__init__(
+            'too-many-messages-warning',
+            ("More Signals found in Sumo Logic Cloud SIEM Enterprise "
+             f"for {obs_value} than can be rendered. Log in to the "
+             "Sumo Logic Cloud SIEM Enterprise console to see all Signals"),
+            type_='warning'
+        )
