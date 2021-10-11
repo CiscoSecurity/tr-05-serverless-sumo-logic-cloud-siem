@@ -45,7 +45,16 @@ INDICATOR_DEFAULTS = {
 }
 
 
+def source_uri(uri_path):
+    host = current_app.config["HOST"]
+    return (
+        f"https://{host.replace('api', 'service')}/"
+        f"sec/{uri_path}"
+    )
+
+
 class SightingOfInsight:
+    _uri_path = "insight/{id}"
 
     @staticmethod
     def _transient_id(insight, value) -> str:
@@ -70,14 +79,6 @@ class SightingOfInsight:
     def _severity(insight):
         return \
             SIGNAL_SEVERITY.get(insight.get("severity"), "Unknown")
-
-    @staticmethod
-    def _source_uri(insight):
-        host = current_app.config["HOST"]
-        return (
-            f"https://{host.replace('api', 'service')}/"
-            f"sec/insight/{insight.get('id')}"
-        )
 
     @staticmethod
     def _observed_time(insight):
@@ -119,7 +120,9 @@ class SightingOfInsight:
             "resolution": insight.get("resolution") or "Unresolved",
             "severity": self._severity(insight),
             "short_description": self._short_description(insight),
-            "source_uri": self._source_uri(insight),
+            "source_uri": source_uri(
+                self._uri_path.format(id=insight.get("id"))
+            ),
             **SIGHTING_DEFAULTS
         }
 
@@ -136,6 +139,8 @@ class SightingOfInsight:
 
 
 class Indicator:
+    _uri_path = "content/rules/rule/{rule_id}"
+
     @staticmethod
     def _transient_id(signal):
         rule_id = signal.get("ruleId")
@@ -149,20 +154,14 @@ class Indicator:
         }
 
     @staticmethod
-    def _url(rule_id):
-        host = current_app.config["HOST"]
-        return (
-            f"https://{host.replace('api', 'service')}/"
-            f"sec/content/rules/rule/{rule_id}"
-        )
-
-    @staticmethod
     def _external_references(signal):
         rule_id = signal.get("ruleId")
         return {
             "source_name": SOURCE,
             "description": signal.get("description"),
-            "url": Indicator._url(rule_id),
+            "url": source_uri(
+                Indicator._uri_path.format(rule_id=signal.get("ruleId"))
+            ),
             "external_id": rule_id
         }
 
@@ -173,7 +172,9 @@ class Indicator:
             "external_references": self._external_references(signal),
             "severity": signal.get("severity", "Unknown"),
             "short_description": signal.get("description"),
-            "source_uri": self._url(signal.get("ruleId")),
+            "source_uri": source_uri(
+                self._uri_path.format(rule_id=signal.get("ruleId"))
+            ),
             "tags": signal.get("tags"),
             **INDICATOR_DEFAULTS
         }

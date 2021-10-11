@@ -6,7 +6,11 @@ from pytest import fixture
 
 from app import app
 from api.errors import INVALID_ARGUMENT
-from tests.unit.payloads_for_tests import PRIVATE_KEY
+from tests.unit.payloads_for_tests import (
+    PRIVATE_KEY,
+    OBSERVE_OBSERVABLES_RESPONSE,
+    REFER_RESPONSE,
+)
 
 
 @fixture(scope='session')
@@ -120,3 +124,11 @@ def connection_error_expected_relay_response():
                 }
             ]
     }
+
+
+@fixture
+def expected_relay_response(route):
+    return {
+        '/observe/observables': OBSERVE_OBSERVABLES_RESPONSE,
+        '/refer/observables': REFER_RESPONSE
+    }[route]

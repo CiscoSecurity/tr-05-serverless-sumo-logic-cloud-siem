@@ -591,3 +591,20 @@ OBSERVE_OBSERVABLES_RESPONSE = {
         }
     }
 }
+
+REFER_RESPONSE = {
+    "data": [
+        {
+            "categories": [
+                "Search",
+                "SumoLogic",
+                "Cloud SIEM Enterprise"
+            ],
+            "description": "Lookup this domain on Sumo Logic Cloud SIEM "
+                           "Enterprise console",
+            "id": "ref-sumo-search-logic-cse-domain-cisco.com",
+            "title": "Search for this domain",
+            "url": "https://service.us2.sumologic.com/sec/search?q=cisco.com"
+        }
+    ]
+}
