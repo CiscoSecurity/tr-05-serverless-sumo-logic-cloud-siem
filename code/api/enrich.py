@@ -37,9 +37,10 @@ def observe_observables():
                 insight_sighting_map.extract(insight, observable)
             g.sightings.append(insight_sighting)
 
-            indicators = [indicator_map.extract(signal) for signal in
-                          insight.get('signals')]
-            g.indicators.extend(indicators)
+            for signal in insight.get('signals'):
+                indicator = indicator_map.extract(signal)
+                if indicator not in g.indicators:
+                    g.indicators.append(indicator)
 
     return jsonify_result()
 
