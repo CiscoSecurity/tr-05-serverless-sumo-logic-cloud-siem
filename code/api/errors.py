@@ -1,9 +1,12 @@
 from http import HTTPStatus
+from collections import defaultdict
 
 AUTH_ERROR = 'authorization error'
 INVALID_ARGUMENT = 'invalid argument'
 UNKNOWN = 'unknown'
 CONNECTION_ERROR = 'connection error'
+INVALID_CREDENTIALS = 'wrong access_id or access_key'
+URL_NOT_FOUND = 'URL {url} is not found'
 
 
 class TRFormattedError(Exception):
@@ -66,10 +69,16 @@ class CloudSIEMConnectionError(TRFormattedError):
 
 
 class CriticalCloudSIEMResponseError(TRFormattedError):
-    def __init__(self, response):
+    def __init__(self, status_code, response_text=None, url=None):
+        status_code_map = {
+            HTTPStatus.UNAUTHORIZED: INVALID_CREDENTIALS,
+            HTTPStatus.NOT_FOUND: URL_NOT_FOUND.format(url=url)
+        }
+        status_code_map = defaultdict(lambda: response_text, status_code_map)
         super().__init__(
-            HTTPStatus(response.status_code).phrase,
-            f'Unexpected response from Sumo Logic Cloud SIEM: {response.text}'
+            HTTPStatus(status_code).phrase,
+            'Unexpected response from Sumo Logic Cloud SIEM: '
+            f'{status_code_map[status_code]}'
         )
 
 

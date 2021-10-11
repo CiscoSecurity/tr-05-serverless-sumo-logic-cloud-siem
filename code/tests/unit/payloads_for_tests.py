@@ -456,6 +456,297 @@ INSIGHTS = \
         }
     ]
 
+SIGNALS = [
+    {
+        "allRecords": [
+            {
+                "_cipCollector": "AD",
+                "_cipCollectorId": 226372374,
+                "_cipEncoding": "UTF8",
+                "_cipFormat": "t:none:o:0:l:0:p:null",
+                "_cipMessageTime": 1633967286312,
+                "_cipSource": "Windows Events",
+                "_cipSourceId": 1419227751,
+                "action": "log off",
+                "bro_dns_answers": [],
+                "bro_file_bytes": {},
+                "bro_file_connUids": [],
+                "bro_flow_service": [],
+                "bro_ftp_pendingCommands": [],
+                "bro_http_cookieVars": [],
+                "bro_http_origFuids": [],
+                "bro_http_origMimeTypes": [],
+                "bro_http_request_headers": {},
+                "bro_http_request_proxied": [],
+                "bro_http_response_headers": {},
+                "bro_http_response_respFuids": [],
+                "bro_http_response_respMimeTypes": [],
+                "bro_http_tags": [],
+                "bro_http_uriVars": [],
+                "bro_kerberos_clientCert": {},
+                "bro_kerberos_serverCert": {},
+                "bro_sip_headers": {},
+                "bro_sip_requestPath": [],
+                "bro_sip_responsePath": [],
+                "bro_ssl_certChainFuids": [],
+                "bro_ssl_clientCertChainFuids": [],
+                "cseSignal": {},
+                "day": 11,
+                "description": "An account was logged off",
+                "device_hostname": "AD.lan.cyberthre.at",
+                "device_hostname_raw": "AD.lan.cyberthre.at",
+                "fieldTags": {},
+                "fields": {
+                    "Channel": "Security",
+                    "Computer": "AD.lan.cyberthre.at",
+                    "EventData.LogonType": "3",
+                    "EventData.TargetDomainName": "LAN",
+                    "EventData.TargetLogonId": "0x29deb058",
+                    "EventData.TargetUserName": "AD$",
+                    "EventData.TargetUserSid": "S-1-5-18",
+                    "EventID": "4634",
+                    "EventRecordID": "1956608",
+                    "Execution.ProcessID": "668",
+                    "Execution.ThreadID": "3564",
+                    "Keywords": "Audit Success",
+                    "Level": "Information",
+                    "Message": "An account was logged off.\r\n\r\n"
+                               "Subject:\r\n\tSecurity ID:\t\tNT "
+                               "AUTHORITY\\SYSTEM\r\n\tAccount Name"
+                               ":\t\tAD$\r\n\tAccount Domain:\t\tLAN"
+                               "\r\n\tLogon ID:\t\t0x29DEB058\r\n\r"
+                               "\nLogon Type:\t\t\t3\r\n\r\nThis "
+                               "event is generated when a logon "
+                               "session is destroyed. It may be positively "
+                               "correlated with a logon event using "
+                               "the Logon ID value. Logon IDs are only "
+                               "unique between reboots on the same computer.",
+                    "Opcode": "Info",
+                    "Provider.Guid": "{54849625-5478-4994-a5ba-3e3b0328c30d}",
+                    "Provider.Name": "Microsoft-Windows-Security-Auditing",
+                    "Task": "12545",
+                    "TimeCreated": "2021-10-11T15:48:06.3129580Z",
+                    "TimeCreated.SystemTime": "2021-10-11T15:48:06.3129580Z",
+                    "Version": "0"
+                },
+                "friendlyName": "record",
+                "hour": 15,
+                "http_requestHeaders": {},
+                "listMatches": [],
+                "logonType": "Network",
+                "matchedItems": [],
+                "metadata_deviceEventId": "Security-4634",
+                "metadata_mapperName": "Windows - Security - 4634",
+                "metadata_mapperUid": "82a49cb6-4d8a-4985"
+                                      "-b5ca-6aad8815d53d",
+                "metadata_orgId": "00000000009BCE86",
+                "metadata_parseTime": 1633967546794,
+                "metadata_product": "Windows",
+                "metadata_productGuid": "1ff7546c-cb36-4a24"
+                                        "-87f7-89d2cecc5761",
+                "metadata_receiptTime": 1633967511,
+                "metadata_schemaVersion": 3,
+                "metadata_sensorId": "00000000009BCE86",
+                "metadata_sensorInformation": {},
+                "metadata_sensorZone": "default",
+                "metadata_sourceCategory": "windows/events",
+                "metadata_sourceMessageId": "941717352124743682",
+                "metadata_vendor": "Microsoft",
+                "month": 10,
+                "objectType": "Authentication",
+                "timestamp": 1633967286312,
+                "uid": "5834b4dc-8d2e-5e69-9c2f-21812b2a8303",
+                "user_authDomain": "LAN",
+                "user_username": "AD$",
+                "user_username_raw": "AD$",
+                "year": 2021
+            }
+        ],
+        "artifacts": [],
+        "contentType": "RULE",
+        "description": "Test rule",
+        "entity": {
+            "entityType": "_hostname",
+            "hostname": "AD.lan.cyberthre.at",
+            "id": "_hostname-AD.lan.cyberthre.at",
+            "macAddress": None,
+            "name": "AD.lan.cyberthre.at",
+            "sensorZone": "",
+            "value": "AD.lan.cyberthre.at"
+        },
+        "id": "a5c56767-9af2-56fc-9711-01bc64f3ab7d",
+        "name": "Device hostname signal",
+        "recordCount": 1,
+        "recordTypes": [],
+        "ruleId": "MATCH-U00001",
+        "severity": 1,
+        "stage": "Unknown/Other",
+        "suppressed": True,
+        "tags": [
+            "Tactic"
+        ],
+        "timestamp": "2021-10-11T15:48:06.312000"
+    },
+    {
+        "allRecords": [
+            {
+                "_cipCollector": "AD",
+                "_cipCollectorId": 226372374,
+                "_cipEncoding": "UTF8",
+                "_cipFormat": "t:none:o:0:l:0:p:null",
+                "_cipMessageTime": 1633967286311,
+                "_cipSource": "Windows Events",
+                "_cipSourceId": 1419227751,
+                "bro_dns_answers": [],
+                "bro_file_bytes": {},
+                "bro_file_connUids": [],
+                "bro_flow_service": [],
+                "bro_ftp_pendingCommands": [],
+                "bro_http_cookieVars": [],
+                "bro_http_origFuids": [],
+                "bro_http_origMimeTypes": [],
+                "bro_http_request_headers": {},
+                "bro_http_request_proxied": [],
+                "bro_http_response_headers": {},
+                "bro_http_response_respFuids": [],
+                "bro_http_response_respMimeTypes": [],
+                "bro_http_tags": [],
+                "bro_http_uriVars": [],
+                "bro_kerberos_clientCert": {},
+                "bro_kerberos_serverCert": {},
+                "bro_sip_headers": {},
+                "bro_sip_requestPath": [],
+                "bro_sip_responsePath": [],
+                "bro_ssl_certChainFuids": [],
+                "bro_ssl_clientCertChainFuids": [],
+                "cseSignal": {},
+                "day": 11,
+                "description": "Special privileges assigned to new logon",
+                "device_hostname": "AD.lan.cyberthre.at",
+                "device_hostname_raw": "AD.lan.cyberthre.at",
+                "fieldTags": {},
+                "fields": {
+                    "Channel": "Security",
+                    "Computer": "AD.lan.cyberthre.at",
+                    "EventData.PrivilegeList": "SeSecurityPrivilege"
+                                               "\r\n\t\t\t"
+                                               "SeBackupPrivilege"
+                                               "\r\n\t\t\tSeR"
+                                               "estorePrivilege"
+                                               "\r\n\t\t\tSeTake"
+                                               "OwnershipPrivilege"
+                                               "\r\n\t\t\tSeD"
+                                               "ebugPrivilege"
+                                               "\r\n\t\t\tSeSystem"
+                                               "EnvironmentPrivilege"
+                                               "\r\n\t\t\tSe"
+                                               "LoadDriverPrivilege"
+                                               "\r\n\t\t\tSeI"
+                                               "mpersonatePrivilege"
+                                               "\r\n\t\t\tSeDe"
+                                               "legateSessionUser"
+                                               "ImpersonatePrivi"
+                                               "lege\r\n\t\t\t"
+                                               "SeEnableDelegationP"
+                                               "rivilege",
+                    "EventData.SubjectDomainName": "LAN",
+                    "EventData.SubjectLogonId": "0x29deb058",
+                    "EventData.SubjectUserName": "AD$",
+                    "EventData.SubjectUserSid": "S-1-5-18",
+                    "EventID": "4672",
+                    "EventRecordID": "1956606",
+                    "Execution.ProcessID": "668",
+                    "Execution.ThreadID": "688",
+                    "Keywords": "Audit Success",
+                    "Level": "Information",
+                    "Message": "Special privileges assigned "
+                               "to new "
+                               "logon.\r\n\r\nSubject:\r\n\t"
+                               "Security "
+                               "ID:\t\tNT AUTHORITY\\SYSTEM"
+                               "\r\n\tAccount "
+                               "Name:\t\tAD$\r\n\tAccount "
+                               "Domain:\t\tLAN\r\n\tLogon ID:"
+                               "\t\t0x29DEB058\r\n\r\n"
+                               "Privileges:\t\tSeSecurityPrivilege"
+                               "\r\n\t\t\tSeBackup"
+                               "Privilege\r\n\t\t\t"
+                               "SeRestorePrivilege\r\n\t\t\t"
+                               "SeTakeOwnershipPrivilege"
+                               "\r\n\t\t\tSeDebugPrivilege"
+                               "\r\n\t\t\tSeSystemEnvironment"
+                               "Privilege\r\n\t\t\t"
+                               "SeLoadDriverPrivilege"
+                               "\r\n\t\t\tSeImpersonatePrivilege"
+                               "\r\n\t\t\tSeDelegateSession"
+                               "UserImpersonatePrivilege"
+                               "\r\n\t\t\tSeEnableDelegation"
+                               "Privilege",
+                    "Opcode": "Info",
+                    "Provider.Guid": "{54849625-5478-4994-a5ba-3e3b0328c30d}",
+                    "Provider.Name": "Microsoft-Windows-Security-Auditing",
+                    "Task": "12548",
+                    "TimeCreated": "2021-10-11T15:48:06.3112865Z",
+                    "TimeCreated.SystemTime": "2021-10-11T15:48:06.3112865Z",
+                    "Version": "0"
+                },
+                "friendlyName": "record",
+                "hour": 15,
+                "http_requestHeaders": {},
+                "listMatches": [],
+                "matchedItems": [],
+                "metadata_deviceEventId": "Security-4672",
+                "metadata_mapperName": "Windows - Security - 4672",
+                "metadata_mapperUid": "a7b7f2c8-2b27-4958-b164-2be8a5ec12cf",
+                "metadata_orgId": "00000000009BCE86",
+                "metadata_parseTime": 1633967546783,
+                "metadata_product": "Windows",
+                "metadata_productGuid": "1ff7546c-cb36-4a24-87f7-89d2cecc5761",
+                "metadata_receiptTime": 1633967511,
+                "metadata_schemaVersion": 3,
+                "metadata_sensorId": "00000000009BCE86",
+                "metadata_sensorInformation": {},
+                "metadata_sensorZone": "default",
+                "metadata_sourceCategory": "windows/events",
+                "metadata_sourceMessageId": "941717352124743680",
+                "metadata_vendor": "Microsoft",
+                "month": 10,
+                "objectType": "Audit",
+                "timestamp": 1633967286311,
+                "uid": "e7c2502b-3d9b-5a3a-8727-b2bcc7b72cd4",
+                "user_userId": "S-1-5-18",
+                "user_username": "AD$",
+                "user_username_raw": "AD$",
+                "year": 2021
+            }
+        ],
+        "artifacts": [],
+        "contentType": "RULE",
+        "description": "Test rule",
+        "entity": {
+            "entityType": "_hostname",
+            "hostname": "AD.lan.cyberthre.at",
+            "id": "_hostname-AD.lan.cyberthre.at",
+            "macAddress": None,
+            "name": "AD.lan.cyberthre.at",
+            "sensorZone": "",
+            "value": "AD.lan.cyberthre.at"
+        },
+        "id": "c68b350d-4348-5ea8-9e54-1c3256c9e1c9",
+        "name": "Device hostname signal",
+        "recordCount": 1,
+        "recordTypes": [],
+        "ruleId": "MATCH-U00001",
+        "severity": 1,
+        "stage": "Unknown/Other",
+        "suppressed": True,
+        "tags": [
+            "Tactic"
+        ],
+        "timestamp": "2021-10-11T15:48:06.311000"
+    }
+]
+
 INSIGHT_SIGHTINGS = [
     {
         "confidence": "High",
@@ -465,7 +756,7 @@ INSIGHT_SIGHTINGS = [
             "5894b5c4-cb1b-4164-839e-433fb9b06780",
             "INSIGHT-8"
         ],
-        "id": "sighting-c08bdfac-9ee7-5dc2-9530-c3d4bcdddac1",
+        "id": "sighting-d41b34d1-afec-5565-aa36-4e0fa3b005b5",
         "internal": True,
         "observables": [
             {
@@ -512,7 +803,7 @@ INSIGHT_SIGHTINGS = [
             "99117227-ebb0-442f-8b27-78f3f8dd5223",
             "INSIGHT-9"
         ],
-        "id": "sighting-ee70b6b2-ea78-579c-bfeb-8e8a861c3734",
+        "id": "sighting-43ac512d-a63e-59e7-9c0a-cafb0bb12295",
         "internal": True,
         "observables": [
             {
@@ -553,11 +844,181 @@ INSIGHT_SIGHTINGS = [
     }
 ]
 
+SIGNAL_SIGHTINGS = [
+    {
+        "confidence": "High",
+        "count": 1,
+        "description": "Test rule",
+        "external_ids": [
+            "c0942d9a-6bb9-59f3-b172-395e8fc09136"
+        ],
+        "id": "sighting-c45f392d-9cc8-5e0e-9591-001563e00123",
+        "internal": True,
+        "observables": [
+            {
+                "type": "domain",
+                "value": "cisco.com"
+            }
+        ],
+        "observed_time": {
+            "start_time": "2021-09-30T23:32:48.966000"
+        },
+        "schema_version": "1.1.8",
+        "severity": "Low",
+        "short_description": "Signal: Unspecified Malicious "
+                             "Activity for entity AD.lan.cyberthre.at "
+                             "contains the observable.",
+        "source": "Sumo Logic Cloud SIEM Enterprise",
+        "source_uri": "https://service.us2.sumologic.com/sec/"
+                      "signal/c0942d9a-6bb9-59f3-b172-395e8fc09136",
+        "targets": [
+            {
+                "observables": [
+                    {
+                        "type": "hostname",
+                        "value": "AD.lan.cyberthre.at"
+                    }
+                ],
+                "observed_time": {
+                    "start_time": "2021-09-30T23:32:48.966000"
+                },
+                "type": "Entity"
+            }
+        ],
+        "title": "A Sumo Logic Cloud SIEM Signal "
+                 "contains observable in a Signal",
+        "type": "sighting"
+    }
+]
+
+SIGNAL_OF_INSIGHT_SIGHTINGS = [
+    {
+        "confidence": "High",
+        "count": 1,
+        "description": "Test rule",
+        "external_ids": [
+            "a5c56767-9af2-56fc-9711-01bc64f3ab7d"
+        ],
+        "id": "sighting-58209ed5-dcb0-526e-87ad-d8e61d13865d",
+        "internal": True,
+        "observables": [
+            {
+                "type": "domain",
+                "value": "cisco.com"
+            }
+        ],
+        "observed_time": {
+            "start_time": "2021-10-11T15:48:06.312000"
+        },
+        "schema_version": "1.1.8",
+        "severity": "Low",
+        "short_description": "Signal: Device hostname signal "
+                             "for entity AD.lan.cyberthre.at "
+                             "contains the observable.",
+        "source": "Sumo Logic Cloud SIEM Enterprise",
+        "source_uri": "https://service.us2.sumologic.com/sec/"
+                      "signal/a5c56767-9af2-56fc-9711-01bc64f3ab7d",
+        "targets": [
+            {
+                "observables": [
+                    {
+                        "type": "hostname",
+                        "value": "AD.lan.cyberthre.at"
+                    }
+                ],
+                "observed_time": {
+                    "start_time": "2021-10-11T15:48:06.312000"
+                },
+                "type": "Entity"
+            }
+        ],
+        "title": "A Sumo Logic Cloud SIEM Signal contains "
+                 "observable in a Signal",
+        "type": "sighting"
+    },
+    {
+        "confidence": "High",
+        "count": 1,
+        "description": "Test rule",
+        "external_ids": [
+            "c68b350d-4348-5ea8-9e54-1c3256c9e1c9"
+        ],
+        "id": "sighting-bd2bcf72-844d-5043-b504-fd416c1f0936",
+        "internal": True,
+        "observables": [
+            {
+                "type": "domain",
+                "value": "cisco.com"
+            }
+        ],
+        "observed_time": {
+            "start_time": "2021-10-11T15:48:06.311000"
+        },
+        "schema_version": "1.1.8",
+        "severity": "Low",
+        "short_description": "Signal: Device hostname signal "
+                             "for entity AD.lan.cyberthre.at "
+                             "contains the observable.",
+        "source": "Sumo Logic Cloud SIEM Enterprise",
+        "source_uri": "https://service.us2.sumologic.com/sec/"
+                      "signal/c68b350d-4348-5ea8-9e54-1c3256c9e1c9",
+        "targets": [
+            {
+                "observables": [
+                    {
+                        "type": "hostname",
+                        "value": "AD.lan.cyberthre.at"
+                    }
+                ],
+                "observed_time": {
+                    "start_time": "2021-10-11T15:48:06.311000"
+                },
+                "type": "Entity"
+            }
+        ],
+        "title": "A Sumo Logic Cloud SIEM Signal contains "
+                 "observable in a Signal",
+        "type": "sighting"
+    }
+]
+
+INDICATORS = [
+    {
+        "external_references": {
+            "description": "Test rule",
+            "external_id": "MATCH-U00001",
+            "source_name": "Sumo Logic Cloud SIEM Enterprise",
+            "url": "https://service.us2.sumologic.com/sec/content/rules"
+                   "/rule/MATCH-U00001"
+        },
+        "id": "indicator-9692a26b-2f2c-5deb-8178-4e359a1fe1fd",
+        "producer": "Sumo Logic",
+        "schema_version": "1.1.8",
+        "severity": 1,
+        "short_description": "Test rule",
+        "source_uri": "https://service.us2.sumologic.com/sec/content/rules"
+                      "/rule/MATCH-U00001",
+        "tags": [
+            "Tactic"
+        ],
+        "type": "indicator",
+        "valid_time": {
+            "start_time": "2021-09-30T23:32:48.966000"
+        }
+    }
+]
+
 OBSERVE_OBSERVABLES_RESPONSE = {
     "data": {
+        "indicators": {
+            "count": 1,
+            "docs": INDICATORS
+        },
         "sightings": {
-            "count": 2,
-            "docs": INSIGHT_SIGHTINGS
+            "count": 5,
+            "docs": (INSIGHT_SIGHTINGS +
+                     SIGNAL_SIGHTINGS +
+                     SIGNAL_OF_INSIGHT_SIGHTINGS)
         }
     }
 }

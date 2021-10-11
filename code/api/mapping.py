@@ -53,11 +53,20 @@ SIGHTING_DEFAULTS = {
     "confidence": CONFIDENCE,
 }
 
+INDICATOR = "indicator"
+PRODUCER = "Sumo Logic"
+
+INDICATOR_DEFAULTS = {
+    "producer": PRODUCER,
+    "schema_version": SCHEMA,
+    "type": INDICATOR
+}
+
 
 class Sighting:
 
     @staticmethod
-    def _id(obj, value, _type) -> str:
+    def _transient_id(obj, value, _type) -> str:
         _id = obj.get("id")
         timestamp = obj.get("created")
         title = INSIGHT_TITLE if _type == INSIGHT else SIGNAL_TITLE
@@ -132,7 +141,7 @@ class Sighting:
 
     def _extract_defaults(self, obj, observable, _type):
         return {
-            "id": self._id(obj, observable, _type),
+            "id": self._transient_id(obj, observable, _type),
             "observed_time": self._observed_time(obj, _type),
             "description": obj.get("description") or "",
             "observables": [observable] if observable else [],
@@ -141,7 +150,10 @@ class Sighting:
             **SIGHTING_DEFAULTS
         }
 
-    def extract_from_signal(self, signal, observable, insight=None):
+
+class SignalSighting(Sighting):
+
+    def extract(self, signal, observable, insight=None):
         sighting = {
             "external_ids": [signal.get("id")],
             "title": SIGNAL_TITLE,
@@ -162,7 +174,10 @@ class Sighting:
 
         return sighting
 
-    def extract_from_insight(self, insight, observable):
+
+class InsightSighting(Sighting):
+
+    def extract(self, insight, observable):
 
         sighting = {
             "external_ids": [insight.get("id"), insight.get("readableId")],
@@ -182,3 +197,47 @@ class Sighting:
             sighting["observed_time"]["end_time"] = closed
 
         return sighting
+
+
+class Indicator:
+    @staticmethod
+    def _transient_id(signal):
+        rule_id = signal.get("ruleId")
+        seeds = f"{INDICATOR}-{PRODUCER}-{rule_id}"
+        return f"{INDICATOR}-{uuid5(NAMESPACE_X500, seeds)}"
+
+    @staticmethod
+    def _valid_time(signal):
+        return {
+            "start_time": signal.get("timestamp")
+        }
+
+    @staticmethod
+    def _url(rule_id):
+        host = current_app.config["HOST"]
+        return (
+            f"https://{host.replace('api', 'service')}/"
+            f"sec/content/rules/rule/{rule_id}"
+        )
+
+    @staticmethod
+    def _external_references(signal):
+        rule_id = signal.get("ruleId")
+        return {
+            "source_name": SOURCE,
+            "description": signal.get("description"),
+            "url": Indicator._url(rule_id),
+            "external_id": rule_id
+        }
+
+    def extract(self, signal):
+        return {
+            "id": self._transient_id(signal),
+            "valid_time": self._valid_time(signal),
+            "external_references": self._external_references(signal),
+            "severity": signal.get("severity", "Unknown"),
+            "short_description": signal.get("description"),
+            "source_uri": self._url(signal.get("ruleId")),
+            "tags": signal.get("tags"),
+            **INDICATOR_DEFAULTS
+        }

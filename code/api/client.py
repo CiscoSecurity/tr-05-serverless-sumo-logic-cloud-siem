@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import requests
 from flask import current_app, g
 from requests.exceptions import (
@@ -9,7 +11,6 @@ from requests.exceptions import (
 )
 
 from api.errors import (
-    AuthorizationError,
     CloudSIEMConnectionError,
     CriticalCloudSIEMResponseError,
     CloudSIEMSSLError
@@ -32,9 +33,9 @@ class SumoLogicCloudSIEMClient:
         self._headers = {
             'User-Agent': current_app.config['USER_AGENT']
         }
-        self._ctr_limit = \
+        self.ctr_limit = \
             current_app.config['CTR_ENTITIES_LIMIT']
-        self._default_ctr_limit = \
+        self.default_ctr_limit = \
             current_app.config['CTR_DEFAULT_ENTITIES_LIMIT']
 
     def _url(self, api_path):
@@ -57,14 +58,20 @@ class SumoLogicCloudSIEMClient:
         except SSLError as error:
             raise CloudSIEMSSLError(error)
         except UnicodeError:
-            raise AuthorizationError(INVALID_CREDENTIALS)
+            """We receive this exception when user
+            inputs cyrillic in credentials"""
+            raise CriticalCloudSIEMResponseError(HTTPStatus.UNAUTHORIZED)
         except (ConnectionError, MissingSchema, InvalidSchema, InvalidURL):
+            """We receive IncalidURL exception when user
+            leaves host value empty"""
             raise CloudSIEMConnectionError(self._url(api_path))
 
         if response.ok:
             return response.json()
 
-        raise CriticalCloudSIEMResponseError(response)
+        raise CriticalCloudSIEMResponseError(response.status_code,
+                                             response.text,
+                                             url)
 
     def health(self):
         return self._request(path='healthEvents',
@@ -73,8 +80,8 @@ class SumoLogicCloudSIEMClient:
 
     def get_insights(self, observable):
         limit = 10
-        if self._ctr_limit <= limit:
-            limit = self._ctr_limit
+        if self.ctr_limit <= limit:
+            limit = self.ctr_limit
 
         params = {'q': observable, 'limit': limit}
         response = self._request(path='insights', params=params)
@@ -86,22 +93,13 @@ class SumoLogicCloudSIEMClient:
         return data['objects']
 
     def get_signals(self, observable):
-        limit = self._ctr_limit - len(g.sightings)
+        limit = self.ctr_limit - len(g.sightings)
 
         params = {'q': observable, 'limit': limit}
         response = self._request(path='signals', params=params)
         data = response['data']
 
-        if data['total'] > self._default_ctr_limit:
+        if data['total'] > self.default_ctr_limit:
             add_error(MoreSignalsAvailableWarning(observable))
 
         return data['objects']
-
-    @staticmethod
-    def get_signals_from_insight(insight):
-        signals = []
-        for signal in insight['signals']:
-            if signal not in signals:
-                signals.append(signal)
-
-        return signals

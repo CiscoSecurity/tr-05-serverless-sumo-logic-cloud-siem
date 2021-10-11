@@ -10,8 +10,11 @@ from api.utils import (
     jsonify_result
 )
 from api.client import SumoLogicCloudSIEMClient
-from api.mapping import Sighting
-
+from api.mapping import (
+    InsightSighting,
+    SignalSighting,
+    Indicator
+)
 
 enrich_api = Blueprint('enrich', __name__)
 
@@ -24,31 +27,43 @@ def observe_observables():
     observables = get_observables()
     client = SumoLogicCloudSIEMClient(key)
 
-    sighting_map = Sighting()
+    insight_sighting_map = InsightSighting()
+    signal_sighting_map = SignalSighting()
+    indicator_map = Indicator()
 
     g.sightings = []
+    g.indicators = []
 
     for observable in observables:
         insights = client.get_insights(observable['value'])
         for insight in insights:
 
             insight_sighting = \
-                sighting_map.extract_from_insight(insight, observable)
+                insight_sighting_map.extract(insight, observable)
             g.sightings.append(insight_sighting)
 
-            for signal in client.get_signals_from_insight(insight):
-                signal_sighting = \
-                    sighting_map.extract_from_signal(signal,
-                                                     observable,
-                                                     insight)
-                g.sightings.append(signal_sighting)
+            for signal in insight.get('signals'):
+
+                indicator = indicator_map.extract(signal)
+                if indicator not in g.indicators:
+                    g.indicators.append(indicator)
+
+        for insight in insights:
+            for signal in insight.get('signals'):
+                if len(g.sightings) < client.ctr_limit:
+                    signal_sighting = \
+                        signal_sighting_map.extract(signal, observable,
+                                                    insight)
+                    if signal_sighting not in g.sightings:
+                        g.sightings.append(signal_sighting)
 
         signals = client.get_signals(observable['value'])
         for signal in signals:
 
             signal_sighting = \
-                sighting_map.extract_from_signal(signal, observable)
-            g.sightings.append(signal_sighting)
+                signal_sighting_map.extract(signal, observable)
+            if signal_sighting not in g.sightings:
+                g.sightings.append(signal_sighting)
 
     return jsonify_result()
 
