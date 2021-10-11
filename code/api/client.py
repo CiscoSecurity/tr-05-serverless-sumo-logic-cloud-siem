@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 import requests
 from flask import current_app
 from requests.exceptions import (
@@ -9,7 +11,6 @@ from requests.exceptions import (
 )
 
 from api.errors import (
-    AuthorizationError,
     CloudSIEMConnectionError,
     CriticalCloudSIEMResponseError,
     CloudSIEMSSLError
@@ -18,7 +19,6 @@ from api.utils import add_error
 from api.errors import MoreInsightsAvailableWarning
 
 
-INVALID_CREDENTIALS = 'wrong access_id or access_key'
 DEFAULT_LIMIT = 10
 
 
@@ -56,14 +56,20 @@ class SumoLogicCloudSIEMClient:
         except SSLError as error:
             raise CloudSIEMSSLError(error)
         except UnicodeError:
-            raise AuthorizationError(INVALID_CREDENTIALS)
+            """We receive this exception when user
+            inputs cyrillic in credentials"""
+            raise CriticalCloudSIEMResponseError(HTTPStatus.UNAUTHORIZED)
         except (ConnectionError, MissingSchema, InvalidSchema, InvalidURL):
+            """We receive IncalidURL exception when user
+            leaves host value empty"""
             raise CloudSIEMConnectionError(self._url(api_path))
 
         if response.ok:
             return response.json()
 
-        raise CriticalCloudSIEMResponseError(response)
+        raise CriticalCloudSIEMResponseError(response.status_code,
+                                             response.text,
+                                             url)
 
     def health(self):
         return self._request(path='healthEvents',
