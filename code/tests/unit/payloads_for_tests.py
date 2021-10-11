@@ -555,26 +555,27 @@ INSIGHT_SIGHTINGS = [
 
 INDICATORS = [
     {
-        'external_references': {
-            'description': 'Test '
-                           'rule',
-            'external_id': 'MATCH-U00001',
-            'source_name': 'Sumo '
-                           'Logic '
-                           'Cloud '
-                           'SIEM '
-                           'Enterprise',
-            'url': 'https://service.us2.sumologic.com/sec/content/rules/rule/MATCH-U00001'
+        "external_references": {
+            "description": "Test rule",
+            "external_id": "MATCH-U00001",
+            "source_name": "Sumo Logic Cloud SIEM Enterprise",
+            "url": "https://service.us2.sumologic.com/sec/content/rules"
+                   "/rule/MATCH-U00001"
         },
-        'id': 'indicator-9692a26b-2f2c-5deb-8178-4e359a1fe1fd',
-        'producer': 'Sumo Logic',
-        'schema_version': '1.1.8',
-        'severity': 1,
-        'short_description': 'Test rule',
-        'source_uri': 'https://service.us2.sumologic.com/sec/content/rules/rule/MATCH-U00001',
-        'tags': ['Tactic'],
-        'type': 'indicator',
-        'valid_time': {'start_time': '2021-09-30T23:32:48.966000'}
+        "id": "indicator-9692a26b-2f2c-5deb-8178-4e359a1fe1fd",
+        "producer": "Sumo Logic",
+        "schema_version": "1.1.8",
+        "severity": 1,
+        "short_description": "Test rule",
+        "source_uri": "https://service.us2.sumologic.com/sec/content/rules"
+                      "/rule/MATCH-U00001",
+        "tags": [
+            "Tactic"
+        ],
+        "type": "indicator",
+        "valid_time": {
+            "start_time": "2021-09-30T23:32:48.966000"
+        }
     }
 ]
 
