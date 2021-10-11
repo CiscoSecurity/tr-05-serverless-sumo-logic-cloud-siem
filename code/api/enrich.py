@@ -54,7 +54,7 @@ def refer_observables():
     relay_output = [
         {
             'id': (
-                'ref-sumo-search-logic-cse-'
+                'ref-sumo-logic-search-cse-'
                 f'{observable["type"].replace("_", "-")}'
                 f'-{observable["value"]}'
             ),
