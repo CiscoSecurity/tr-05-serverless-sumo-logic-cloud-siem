@@ -35,6 +35,15 @@ SIGHTING_DEFAULTS = {
     "confidence": CONFIDENCE,
 }
 
+INDICATOR = "indicator"
+PRODUCER = "Sumo Logic"
+
+INDICATOR_DEFAULTS = {
+    "producer": PRODUCER,
+    "schema_version": SCHEMA,
+    "type": INDICATOR
+}
+
 
 class SightingOfInsight:
 
@@ -124,3 +133,47 @@ class SightingOfInsight:
             sighting["observed_time"]["end_time"] = closed
 
         return sighting
+
+
+class Indicator:
+    @staticmethod
+    def _transient_id(signal):
+        rule_id = signal.get("ruleId")
+        seeds = f"{INDICATOR}-{PRODUCER}-{rule_id}"
+        return f"{INDICATOR}-{uuid5(NAMESPACE_X500, seeds)}"
+
+    @staticmethod
+    def _valid_time(signal):
+        return {
+            "start_time": signal.get("timestamp")
+        }
+
+    @staticmethod
+    def _url(rule_id):
+        host = current_app.config["HOST"]
+        return (
+            f"https://{host.replace('api', 'service')}/"
+            f"sec/content/rules/rule/{rule_id}"
+        )
+
+    @staticmethod
+    def _external_references(signal):
+        rule_id = signal.get("ruleId")
+        return {
+            "source_name": SOURCE,
+            "description": signal.get("description"),
+            "url": Indicator._url(rule_id),
+            "external_id": rule_id
+        }
+
+    def extract(self, signal):
+        return {
+            "id": self._transient_id(signal),
+            "valid_time": self._valid_time(signal),
+            "external_references": self._external_references(signal),
+            "severity": signal.get("severity", "Unknown"),
+            "short_description": signal.get("description"),
+            "source_uri": self._url(signal.get("ruleId")),
+            "tags": signal.get("tags"),
+            **INDICATOR_DEFAULTS
+        }
