@@ -1,6 +1,6 @@
 from functools import partial
 
-from flask import Blueprint, g
+from flask import Blueprint, g, current_app
 
 from api.schemas import ObservableSchema
 from api.utils import (
@@ -10,7 +10,7 @@ from api.utils import (
     jsonify_result
 )
 from api.client import SumoLogicCloudSIEMClient
-from api.mapping import SightingOfInsight, Indicator
+from api.mapping import SightingOfInsight, Indicator, source_uri
 
 enrich_api = Blueprint('enrich', __name__)
 
@@ -48,5 +48,28 @@ def observe_observables():
 @enrich_api.route('/refer/observables', methods=['POST'])
 def refer_observables():
     _ = get_credentials()
-    _ = get_observables()
-    return jsonify_data([])
+    observables = get_observables()
+
+    obs_types_map = current_app.config['HUMAN_READABLE_OBSERVABLE_TYPES']
+    relay_output = [
+        {
+            'id': (
+                'ref-sumo-logic-search-cse-'
+                f'{observable["type"].replace("_", "-")}'
+                f'-{observable["value"]}'
+            ),
+            'title': (
+                'Search for this '
+                f'{obs_types_map.get(observable["type"], observable["type"])}'
+            ),
+            'description': (
+                'Lookup this '
+                f'{obs_types_map.get(observable["type"], observable["type"])}'
+                ' on Sumo Logic Cloud SIEM Enterprise console'
+            ),
+            'url': source_uri(f'search?q={observable["value"]}'),
+            'categories': ['Search', 'SumoLogic', 'Cloud SIEM Enterprise']
+        }
+        for observable in observables
+    ]
+    return jsonify_data(relay_output)
