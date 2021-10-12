@@ -53,7 +53,9 @@ def observe_observables():
             indicator = indicator_map.extract(signal)
             g.indicators.append(indicator)
 
-        signals = client.get_signals(observable['value'])
+        limit = client.ctr_limit - len(g.sightings)
+        signals = client.get_signals(observable['value'], limit)
+
         for signal in signals:
 
             signal_sighting = signal_sighting_map.extract(signal, observable)

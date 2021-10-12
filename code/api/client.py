@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 import requests
-from flask import current_app, g
+from flask import current_app
 from requests.exceptions import (
     ConnectionError,
     MissingSchema,
@@ -77,8 +77,7 @@ class SumoLogicCloudSIEMClient:
                              params={'limit': 1},
                              api_path='api/v1')
 
-    def get_insights(self, observable):
-        limit = 10
+    def get_insights(self, observable, limit=10):
         if self.ctr_limit <= limit:
             limit = self.ctr_limit
 
@@ -91,8 +90,7 @@ class SumoLogicCloudSIEMClient:
 
         return data['objects']
 
-    def get_signals(self, observable):
-        limit = self.ctr_limit - len(g.sightings)
+    def get_signals(self, observable, limit):
 
         params = {'q': observable, 'limit': limit}
         response = self._request(path='signals', params=params)
