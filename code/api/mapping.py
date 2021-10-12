@@ -141,25 +141,19 @@ class SignalSighting(Sighting):
             "the observable."
         )
 
-    def extract(self, signal, observable, insight=None):
+    def extract(self, signal, observable):
         signal_id = signal.get("id")
         sighting = {
             "external_ids": [signal_id],
             "title": SIGNAL_TITLE,
-            "short_description": (
-                self._short_description(signal) if not insight
-                else self._short_description(insight)
-            ),
+            "short_description": self._short_description(signal),
             "source_uri": source_uri(
                 self._uri_path.format(insight_id=signal_id)
             ),
             **self._extract_defaults(signal, observable, SIGNAL),
         }
 
-        entity = (
-            signal.get("entity") if not insight
-            else insight.get("entity")
-        )
+        entity = signal.get("entity")
         if entity:
             target = self._target(entity, signal.get("timestamp"))
             sighting["targets"] = [target]

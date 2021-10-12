@@ -43,28 +43,24 @@ def observe_observables():
                 insight_sighting_map.extract(insight, observable)
             g.sightings.append(insight_sighting)
 
-            for signal in insight.get('signals'):
+        insights_signals = client.get_insights_signals(insights)
+        limit = client.ctr_limit - len(g.sightings)
 
-                indicator = indicator_map.extract(signal)
-                if indicator not in g.indicators:
-                    g.indicators.append(indicator)
+        for signal in insights_signals[:limit]:
+            signal_sighting = \
+                signal_sighting_map.extract(signal, observable)
+            g.sightings.append(signal_sighting)
 
-        for insight in insights:
-            for signal in insight.get('signals'):
-                if len(g.sightings) < client.ctr_limit:
-                    signal_sighting = \
-                        signal_sighting_map.extract(signal, observable,
-                                                    insight)
-                    if signal_sighting not in g.sightings:
-                        g.sightings.append(signal_sighting)
+        for signal in insights_signals:
+            indicator = indicator_map.extract(signal)
+            g.indicators.append(indicator)
 
         signals = client.get_signals(observable['value'])
         for signal in signals:
 
             signal_sighting = \
                 signal_sighting_map.extract(signal, observable)
-            if signal_sighting not in g.sightings:
-                g.sightings.append(signal_sighting)
+            g.sightings.append(signal_sighting)
 
     return jsonify_result()
 

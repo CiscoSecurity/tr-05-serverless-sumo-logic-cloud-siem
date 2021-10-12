@@ -103,3 +103,13 @@ class SumoLogicCloudSIEMClient:
             add_error(MoreSignalsAvailableWarning(observable))
 
         return data['objects']
+
+    @staticmethod
+    def get_insights_signals(insights):
+        signals = []
+        for insight in insights:
+            for signal in insight.get('signals'):
+                if signal not in signals:
+                    signal['entity'] = insight['entity']
+                    signals.append(signal)
+        return signals
