@@ -59,8 +59,7 @@ def observe_observables():
         for signal in signals:
 
             signal_sighting = signal_sighting_map.extract(signal, observable)
-            if signal_sighting not in g.sightings:
-                g.sightings.append(signal_sighting)
+            g.sightings.append(signal_sighting)
 
     return jsonify_result()
 
