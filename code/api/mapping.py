@@ -63,6 +63,14 @@ INDICATOR_DEFAULTS = {
 }
 
 
+def source_uri(uri_path):
+    host = current_app.config["HOST"]
+    return (
+        f"https://{host.replace('api', 'service')}/"
+        f"sec/{uri_path}"
+    )
+
+
 class Sighting:
 
     @staticmethod
@@ -80,14 +88,6 @@ class Sighting:
             SIGNAL: SIGNAL_SEVERITY
         }
         return severity.get(_type).get(obj.get("severity"), "Unknown")
-
-    @staticmethod
-    def _source_uri(obj, _type):
-        host = current_app.config["HOST"]
-        return (
-            f"https://{host.replace('api', 'service')}/"
-            f"sec/{_type}/{obj.get('id')}"
-        )
 
     @staticmethod
     def _observed_time(obj, _type):
@@ -146,20 +146,24 @@ class Sighting:
             "description": obj.get("description") or "",
             "observables": [observable] if observable else [],
             "severity": self._severity(obj, _type),
-            "source_uri": self._source_uri(obj, _type),
             **SIGHTING_DEFAULTS
         }
 
 
 class SignalSighting(Sighting):
+    _uri_path = "signal/{insight_id}"
 
     def extract(self, signal, observable, insight=None):
+        signal_id = signal.get("id")
         sighting = {
-            "external_ids": [signal.get("id")],
+            "external_ids": [signal_id],
             "title": SIGNAL_TITLE,
             "short_description": (
                 self._signal_short_description(signal) if not insight
                 else self._signal_short_description(insight)
+            ),
+            "source_uri": source_uri(
+                self._uri_path.format(insight_id=signal_id)
             ),
             **self._extract_defaults(signal, observable, SIGNAL),
         }
@@ -176,14 +180,18 @@ class SignalSighting(Sighting):
 
 
 class InsightSighting(Sighting):
+    _uri_path = "insight/{insight_id}"
 
     def extract(self, insight, observable):
-
+        insight_id = insight.get("id")
         sighting = {
-            "external_ids": [insight.get("id"), insight.get("readableId")],
+            "external_ids": [insight_id, insight.get("readableId")],
             "resolution": insight.get("resolution") or "Unresolved",
             "title": INSIGHT_TITLE,
             "short_description": self._insight_short_description(insight),
+            "source_uri": source_uri(
+                self._uri_path.format(insight_id=insight_id)
+            ),
             **self._extract_defaults(insight, observable, INSIGHT),
         }
 
@@ -200,6 +208,8 @@ class InsightSighting(Sighting):
 
 
 class Indicator:
+    _uri_path = "content/rules/rule/{rule_id}"
+
     @staticmethod
     def _transient_id(signal):
         rule_id = signal.get("ruleId")
@@ -213,20 +223,14 @@ class Indicator:
         }
 
     @staticmethod
-    def _url(rule_id):
-        host = current_app.config["HOST"]
-        return (
-            f"https://{host.replace('api', 'service')}/"
-            f"sec/content/rules/rule/{rule_id}"
-        )
-
-    @staticmethod
     def _external_references(signal):
         rule_id = signal.get("ruleId")
         return {
             "source_name": SOURCE,
             "description": signal.get("description"),
-            "url": Indicator._url(rule_id),
+            "url": source_uri(
+                Indicator._uri_path.format(rule_id=signal.get("ruleId"))
+            ),
             "external_id": rule_id
         }
 
@@ -237,7 +241,9 @@ class Indicator:
             "external_references": self._external_references(signal),
             "severity": signal.get("severity", "Unknown"),
             "short_description": signal.get("description"),
-            "source_uri": self._url(signal.get("ruleId")),
+            "source_uri": source_uri(
+                self._uri_path.format(rule_id=signal.get("ruleId"))
+            ),
             "tags": signal.get("tags"),
             **INDICATOR_DEFAULTS
         }
