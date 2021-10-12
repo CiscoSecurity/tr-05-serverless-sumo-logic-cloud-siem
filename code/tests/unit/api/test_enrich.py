@@ -5,12 +5,10 @@ from pytest import fixture
 
 from tests.unit.api.utils import get_headers
 from tests.unit.conftest import (
-    mock_api_response,
-    expected_relay_response
+    mock_api_response
 )
 from tests.unit.payloads_for_tests import (
     EXPECTED_RESPONSE_OF_JWKS_ENDPOINT,
-    OBSERVE_OBSERVABLES_RESPONSE,
     SIGNALS,
     INSIGHTS
 )
@@ -57,7 +55,7 @@ def valid_json():
 @patch('api.client.SumoLogicCloudSIEMClient.get_insights')
 @patch('api.client.SumoLogicCloudSIEMClient.get_signals')
 def test_enrich_call_success(mock_signals, mock_insights, mock_request,
-                             expected_relay_response,route, client,
+                             expected_relay_response, route, client,
                              valid_jwt, valid_json):
     mock_request.return_value = \
         mock_api_response(payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT)

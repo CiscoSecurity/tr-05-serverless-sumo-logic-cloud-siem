@@ -119,26 +119,6 @@ class Sighting:
 
         return target
 
-    @staticmethod
-    def _insight_short_description(insight):
-        signals = insight.get("signals", [])
-        unique_signals = set(signal.get("ruleId") for signal in signals)
-
-        return (
-            f"Signal: {insight.get('readableId')}-{insight.get('name')} "
-            f"for entity {insight.get('entity').get('value')} "
-            "contains the observable. "
-            f"{len(unique_signals)} unique signals of {len(signals)} total."
-        )
-
-    @staticmethod
-    def _signal_short_description(signal):
-        return (
-            f"Signal: {signal.get('name')} for entity "
-            f"{signal.get('entity').get('value')} contains "
-            "the observable."
-        )
-
     def _extract_defaults(self, obj, observable, _type):
         return {
             "id": self._transient_id(obj, observable, _type),
@@ -153,14 +133,22 @@ class Sighting:
 class SignalSighting(Sighting):
     _uri_path = "signal/{insight_id}"
 
+    @staticmethod
+    def _short_description(signal):
+        return (
+            f"Signal: {signal.get('name')} for entity "
+            f"{signal.get('entity').get('value')} contains "
+            "the observable."
+        )
+
     def extract(self, signal, observable, insight=None):
         signal_id = signal.get("id")
         sighting = {
             "external_ids": [signal_id],
             "title": SIGNAL_TITLE,
             "short_description": (
-                self._signal_short_description(signal) if not insight
-                else self._signal_short_description(insight)
+                self._short_description(signal) if not insight
+                else self._short_description(insight)
             ),
             "source_uri": source_uri(
                 self._uri_path.format(insight_id=signal_id)
@@ -182,13 +170,25 @@ class SignalSighting(Sighting):
 class InsightSighting(Sighting):
     _uri_path = "insight/{insight_id}"
 
+    @staticmethod
+    def _short_description(insight):
+        signals = insight.get("signals", [])
+        unique_signals = set(signal.get("ruleId") for signal in signals)
+
+        return (
+            f"Signal: {insight.get('readableId')}-{insight.get('name')} "
+            f"for entity {insight.get('entity').get('value')} "
+            "contains the observable. "
+            f"{len(unique_signals)} unique signals of {len(signals)} total."
+        )
+
     def extract(self, insight, observable):
         insight_id = insight.get("id")
         sighting = {
             "external_ids": [insight_id, insight.get("readableId")],
             "resolution": insight.get("resolution") or "Unresolved",
             "title": INSIGHT_TITLE,
-            "short_description": self._insight_short_description(insight),
+            "short_description": self._short_description(insight),
             "source_uri": source_uri(
                 self._uri_path.format(insight_id=insight_id)
             ),

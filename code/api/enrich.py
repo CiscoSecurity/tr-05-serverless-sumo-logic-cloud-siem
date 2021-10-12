@@ -7,7 +7,7 @@ from api.utils import (
     get_json,
     get_credentials,
     jsonify_data,
-    jsonify_result
+    jsonify_result,
 )
 from api.client import SumoLogicCloudSIEMClient
 from api.mapping import (
