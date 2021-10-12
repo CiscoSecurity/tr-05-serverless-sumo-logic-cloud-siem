@@ -23,7 +23,6 @@ from api.errors import (
 
 
 INVALID_CREDENTIALS = 'wrong access_id or access_key'
-SIGNALS_DEFAULT_LIMIT = 100
 
 
 class SumoLogicCloudSIEMClient:
