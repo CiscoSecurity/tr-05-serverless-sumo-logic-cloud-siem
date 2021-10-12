@@ -889,42 +889,6 @@ SIGNAL_SIGHTINGS = [
         "title": "A Sumo Logic Cloud SIEM Signal "
                  "contains observable in a Signal",
         "type": "sighting"
-    },
-    {
-        "confidence": "High",
-        "count": 1,
-        "description": "Test rule",
-        "external_ids": ["c0942d9a-6bb9-59f3-b172-395e8fc09136"],
-        "id": "sighting-c45f392d-9cc8-5e0e-9591-001563e00123",
-        "internal": True,
-        "observables": [{"type": "domain",
-                         "value": "cisco.com"}],
-        "observed_time": {"start_time": "2021-09-30T23:32:48.966000"},
-        "schema_version": "1.1.8",
-        "severity": "Low",
-        "short_description": "Signal: Device "
-                             "hostname signal for entity AD.lan.cyberthre.at "
-                             "contains the observable.",
-        "source": "Sumo Logic Cloud SIEM Enterprise",
-        "source_uri": "https://service.us2.sumologic.com/sec/"
-                      "signal/c0942d9a-6bb9-59f3-b172-395e8fc09136",
-        "targets": [
-            {
-                "observables": [
-                    {
-                        "type": "hostname",
-                        "value": "AD.lan.cyberthre.at"
-                    }
-                ],
-                "observed_time": {
-                    "start_time": "2021-09-30T23:32:48.966000"
-                },
-                "type": "Entity"
-            }
-        ],
-        "title": "A Sumo Logic Cloud SIEM Signal "
-                 "contains observable in a Signal",
-        "type": "sighting"
     }
 ]
 
@@ -1042,40 +1006,17 @@ INDICATORS = [
         "valid_time": {
             "start_time": "2021-09-30T23:32:48.966000"
         }
-    },
-    {
-        "external_references": {
-            "description": "Test rule",
-            "external_id": "MATCH-U00001",
-            "source_name": "Sumo Logic Cloud SIEM Enterprise",
-            "url": "https://service.us2.sumologic."
-                   "com/sec/content/rules/rule/MATCH-U00001"
-        },
-        "id": "indicator-9692a26b-2f2c-5deb-8178-4e359a1fe1fd",
-        "producer": "Sumo Logic",
-        "schema_version": "1.1.8",
-        "severity": 1,
-        "short_description": "Test rule",
-        "source_uri": "https://service.us2.sumologic."
-                      "com/sec/content/rules/rule/MATCH-U00001",
-        "tags": [
-            "Tactic"
-        ],
-        "type": "indicator",
-        "valid_time": {
-            "start_time": "2021-09-30T23:32:48.966000"
-        }
     }
 ]
 
 OBSERVE_OBSERVABLES_RESPONSE = {
     "data": {
         "indicators": {
-            "count": 2,
+            "count": 1,
             "docs": INDICATORS
         },
         "sightings": {
-            "count": 6,
+            "count": 5,
             "docs": (INSIGHT_SIGHTINGS +
                      SIGNAL_SIGHTINGS +
                      SIGNAL_OF_INSIGHT_SIGHTINGS)

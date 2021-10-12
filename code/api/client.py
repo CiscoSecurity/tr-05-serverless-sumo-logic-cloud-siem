@@ -104,11 +104,11 @@ class SumoLogicCloudSIEMClient:
         return data['objects']
 
     @staticmethod
-    def get_insights_signals(insights):
+    def get_insights_signals(insights, limit):
         signals = []
         for insight in insights:
             for signal in insight.get('signals'):
-                if signal not in signals:
+                if len(signals) < limit:
                     signal['entity'] = insight['entity']
                     signals.append(signal)
         return signals

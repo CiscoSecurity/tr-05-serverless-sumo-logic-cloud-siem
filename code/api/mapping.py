@@ -131,7 +131,7 @@ class Sighting:
 
 
 class SignalSighting(Sighting):
-    _uri_path = "signal/{insight_id}"
+    _uri_path = "signal/{signal_id}"
 
     @staticmethod
     def _short_description(signal):
@@ -148,7 +148,7 @@ class SignalSighting(Sighting):
             "title": SIGNAL_TITLE,
             "short_description": self._short_description(signal),
             "source_uri": source_uri(
-                self._uri_path.format(insight_id=signal_id)
+                self._uri_path.format(signal_id=signal_id)
             ),
             **self._extract_defaults(signal, observable, SIGNAL),
         }
