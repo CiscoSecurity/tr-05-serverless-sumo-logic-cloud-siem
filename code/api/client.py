@@ -108,7 +108,7 @@ class SumoLogicCloudSIEMClient:
         signals = []
         for insight in insights:
             for signal in insight.get('signals'):
-                if len(signals) < limit:
-                    signal['entity'] = insight['entity']
+                signal['entity'] = insight['entity']
+                if len(signals) < limit and signal not in signals:
                     signals.append(signal)
         return signals
