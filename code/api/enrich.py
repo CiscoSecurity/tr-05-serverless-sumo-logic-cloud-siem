@@ -38,7 +38,7 @@ def observe_observables():
     default_ctr_limit = current_app.config['CTR_DEFAULT_ENTITIES_LIMIT']
     g.sightings = UniqueMaxStackList(default_ctr_limit)
     g.indicators = UniqueMaxStackList(default_ctr_limit)
-    g.relationships = []
+    g.relationships = UniqueMaxStackList(default_ctr_limit)
 
     for observable in observables:
         obs_value = observable['value']
