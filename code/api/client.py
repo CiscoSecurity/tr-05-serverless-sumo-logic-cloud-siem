@@ -34,8 +34,6 @@ class SumoLogicCloudSIEMClient:
         }
         self.ctr_limit = \
             current_app.config['CTR_ENTITIES_LIMIT']
-        self.default_ctr_limit = \
-            current_app.config['CTR_DEFAULT_ENTITIES_LIMIT']
 
     def _url(self, api_path):
         url = current_app.config['CLOUD_SIEM_API_ENDPOINT']
@@ -96,7 +94,7 @@ class SumoLogicCloudSIEMClient:
         response = self._request(path='signals', params=params)
         data = response['data']
 
-        if data['total'] > self.default_ctr_limit:
+        if data['total'] > limit:
             add_error(MoreSignalsAvailableWarning(observable))
 
         return data['objects']
