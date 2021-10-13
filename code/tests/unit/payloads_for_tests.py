@@ -1034,6 +1034,25 @@ INDICATORS = [
     }
 ]
 
+RELATIONSHIPS = [
+    {
+        "id": "transient:relationship-59407741-3ef2-4244-8d5b-8332206bdb5c",
+        "relationship_type": "sighting-of",
+        "schema_version": "1.1.8",
+        "source_ref": "sighting-58209ed5-dcb0-526e-87ad-d8e61d13865d",
+        "target_ref": "indicator-9692a26b-2f2c-5deb-8178-4e359a1fe1fd",
+        "type": "relationship"
+    },
+    {
+        "id": "transient:relationship-4b6e1c6c-aea6-495c-b255-0275314f6d2c",
+        "relationship_type": "sighting-of",
+        "schema_version": "1.1.8",
+        "source_ref": "sighting-bd2bcf72-844d-5043-b504-fd416c1f0936",
+        "target_ref": "indicator-9692a26b-2f2c-5deb-8178-4e359a1fe1fd",
+        "type": "relationship"
+    }
+]
+
 OBSERVE_OBSERVABLES_RESPONSE = {
     "data": {
         "indicators": {
@@ -1044,6 +1063,10 @@ OBSERVE_OBSERVABLES_RESPONSE = {
             "count": 4,
             "docs": (INSIGHT_SIGHTINGS +
                      SIGNAL_OF_INSIGHT_SIGHTINGS)
+        },
+        "relationships": {
+            "count": 2,
+            "docs": RELATIONSHIPS
         }
     }
 }
