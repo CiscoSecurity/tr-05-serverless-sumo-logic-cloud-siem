@@ -1,15 +1,32 @@
-from uuid import uuid5, NAMESPACE_X500
+from uuid import uuid5, NAMESPACE_X500, uuid4
 
 from flask import current_app
 
 INSIGHT = "insight"
+SIGNAL = "signal"
+
+INDICATOR = "indicator"
+SIGHTING = "sighting"
+RELATIONSHIP = "relationship"
+
+SCHEMA = "1.1.8"
+PRODUCER = "Sumo Logic"
+SOURCE = "Sumo Logic Cloud SIEM Enterprise"
+INSIGHT_TITLE = (
+    "A Sumo Logic Cloud SIEM Insight "
+    "contains observable in a Signal"
+)
+SIGNAL_TITLE = (
+    "A Sumo Logic Cloud SIEM Signal "
+    "contains observable in a Signal"
+)
+
 INSIGHT_SEVERITY = {
     "HIGH": "High",
     "MEDIUM": "Medium",
     "LOW": "Low"
 }
 
-SIGNAL = "signal"
 SIGNAL_SEVERITY = {
     1: "Low",
     2: "Low",
@@ -29,37 +46,23 @@ ENTITY_TYPES = {
     "_username": "user"
 }
 
-COUNT = 1
-INTERNAL = True
-SCHEMA = "1.1.8"
-CONFIDENCE = "High"
-SIGHTING = "sighting"
-SOURCE = "Sumo Logic Cloud SIEM Enterprise"
-INSIGHT_TITLE = (
-    "A Sumo Logic Cloud SIEM Insight "
-    "contains observable in a Signal"
-)
-SIGNAL_TITLE = (
-    "A Sumo Logic Cloud SIEM Signal "
-    "contains observable in a Signal"
-)
-
-SIGHTING_DEFAULTS = {
-    "schema_version": SCHEMA,
-    "type": SIGHTING,
-    "count": COUNT,
-    "source": SOURCE,
-    "internal": INTERNAL,
-    "confidence": CONFIDENCE,
+CTIM_DEFAULTS = {
+    'schema_version': SCHEMA
 }
 
-INDICATOR = "indicator"
-PRODUCER = "Sumo Logic"
+SIGHTING_DEFAULTS = {
+    "type": SIGHTING,
+    "count": 1,
+    "source": SOURCE,
+    "internal": True,
+    "confidence": "High",
+    **CTIM_DEFAULTS
+}
 
 INDICATOR_DEFAULTS = {
     "producer": PRODUCER,
-    "schema_version": SCHEMA,
-    "type": INDICATOR
+    "type": INDICATOR,
+    **CTIM_DEFAULTS
 }
 
 
@@ -240,4 +243,18 @@ class Indicator:
             ),
             "tags": signal.get("tags"),
             **INDICATOR_DEFAULTS
+        }
+
+
+class Relationship:
+
+    @staticmethod
+    def extract(source_ref, target_ref, type_):
+        return {
+            'id': f'transient:{RELATIONSHIP}-{uuid4()}',
+            'source_ref': source_ref,
+            'target_ref': target_ref,
+            'relationship_type': type_,
+            'type': RELATIONSHIP,
+            **CTIM_DEFAULTS
         }
