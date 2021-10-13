@@ -8,6 +8,7 @@ from api.utils import (
     get_credentials,
     jsonify_data,
     jsonify_result,
+    UniqueMaxStackList
 )
 from api.client import SumoLogicCloudSIEMClient
 from api.mapping import (
@@ -32,8 +33,8 @@ def observe_observables():
     signal_sighting_map = SignalSighting()
     indicator_map = Indicator()
 
-    g.sightings = []
-    g.indicators = []
+    g.sightings = UniqueMaxStackList(100)
+    g.indicators = UniqueMaxStackList(100)
 
     for observable in observables:
         obs_value = observable['value']
@@ -58,12 +59,10 @@ def observe_observables():
         for signal in signals:
 
             signal_sighting = signal_sighting_map.extract(signal, observable)
-            if signal_sighting not in g.sightings:
-                g.sightings.append(signal_sighting)
+            g.sightings.append(signal_sighting)
 
             indicator = indicator_map.extract(signal)
-            if indicator not in g.indicators:
-                g.indicators.append(indicator)
+            g.indicators.append(indicator)
 
     return jsonify_result()
 
