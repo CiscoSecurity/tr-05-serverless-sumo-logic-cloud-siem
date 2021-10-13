@@ -7,10 +7,16 @@ from api.utils import (
     get_json,
     get_credentials,
     jsonify_data,
-    jsonify_result
+    jsonify_result,
+    UniqueMaxStackList
 )
 from api.client import SumoLogicCloudSIEMClient
-from api.mapping import SightingOfInsight, Indicator, source_uri
+from api.mapping import (
+    InsightSighting,
+    SignalSighting,
+    Indicator,
+    source_uri
+)
 
 enrich_api = Blueprint('enrich', __name__)
 
@@ -23,24 +29,41 @@ def observe_observables():
     observables = get_observables()
     client = SumoLogicCloudSIEMClient(key)
 
-    insight_sighting_map = SightingOfInsight()
+    insight_sighting_map = InsightSighting()
+    signal_sighting_map = SignalSighting()
     indicator_map = Indicator()
 
-    g.sightings = []
-    g.indicators = []
+    default_ctr_limit = current_app.config['CTR_DEFAULT_ENTITIES_LIMIT']
+    g.sightings = UniqueMaxStackList(default_ctr_limit)
+    g.indicators = UniqueMaxStackList(default_ctr_limit)
 
     for observable in observables:
-        insights = client.get_insights(observable['value'])
+        obs_value = observable['value']
+        insights = client.get_insights(obs_value)
         for insight in insights:
 
             insight_sighting = \
                 insight_sighting_map.extract(insight, observable)
             g.sightings.append(insight_sighting)
 
-            for signal in insight.get('signals'):
-                indicator = indicator_map.extract(signal)
-                if indicator not in g.indicators:
-                    g.indicators.append(indicator)
+        insights_signals = client.get_insights_signals(insights, obs_value)
+
+        for signal in insights_signals:
+            signal_sighting = signal_sighting_map.extract(signal, observable)
+            g.sightings.append(signal_sighting)
+
+            indicator = indicator_map.extract(signal)
+            g.indicators.append(indicator)
+
+        signals = client.get_signals(obs_value, client.ctr_limit)
+
+        for signal in signals:
+
+            signal_sighting = signal_sighting_map.extract(signal, observable)
+            g.sightings.append(signal_sighting)
+
+            indicator = indicator_map.extract(signal)
+            g.indicators.append(indicator)
 
     return jsonify_result()
 

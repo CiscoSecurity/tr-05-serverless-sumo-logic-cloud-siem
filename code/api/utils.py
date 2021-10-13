@@ -159,3 +159,15 @@ def set_ctr_entities_limit(payload):
     except (KeyError, ValueError, AssertionError):
         ctr_entities_limit = current_app.config['CTR_DEFAULT_ENTITIES_LIMIT']
     current_app.config['CTR_ENTITIES_LIMIT'] = ctr_entities_limit
+
+
+class UniqueMaxStackList(list):
+    def __init__(self, max_size):
+        super().__init__()
+        self.max_size = max_size
+
+    def append(self, element):
+        # If the list has not exceeded the maximum size,
+        # and there is no duplicate, append new element.
+        if not self.__len__() >= self.max_size and element not in self:
+            super().append(element)

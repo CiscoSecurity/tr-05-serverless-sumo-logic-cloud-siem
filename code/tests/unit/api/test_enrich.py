@@ -4,9 +4,12 @@ from unittest.mock import patch
 from pytest import fixture
 
 from tests.unit.api.utils import get_headers
-from tests.unit.conftest import mock_api_response
+from tests.unit.conftest import (
+    mock_api_response
+)
 from tests.unit.payloads_for_tests import (
     EXPECTED_RESPONSE_OF_JWKS_ENDPOINT,
+    SIGNALS,
     INSIGHTS
 )
 
@@ -50,12 +53,14 @@ def valid_json():
 
 @patch('requests.get')
 @patch('api.client.SumoLogicCloudSIEMClient.get_insights')
-def test_enrich_call_success(mock_data, mock_request,
-                             route, client, valid_jwt, valid_json,
-                             expected_relay_response):
+@patch('api.client.SumoLogicCloudSIEMClient.get_signals')
+def test_enrich_call_success(mock_signals, mock_insights, mock_request,
+                             expected_relay_response, route, client,
+                             valid_jwt, valid_json):
     mock_request.return_value = \
         mock_api_response(payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT)
-    mock_data.return_value = INSIGHTS
+    mock_insights.return_value = INSIGHTS
+    mock_signals.return_value = SIGNALS
     response = client.post(route, headers=get_headers(valid_jwt()),
                            json=valid_json)
     assert response.status_code == HTTPStatus.OK
