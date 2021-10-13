@@ -43,8 +43,7 @@ def observe_observables():
                 insight_sighting_map.extract(insight, observable)
             g.sightings.append(insight_sighting)
 
-        limit = client.ctr_limit - len(g.sightings)
-        insights_signals = client.get_insights_signals(insights, limit)
+        insights_signals = client.get_insights_signals(insights)
 
         for signal in insights_signals:
             signal_sighting = signal_sighting_map.extract(signal, observable)
@@ -53,8 +52,7 @@ def observe_observables():
             indicator = indicator_map.extract(signal)
             g.indicators.append(indicator)
 
-        limit = client.ctr_limit - len(g.sightings)
-        signals = client.get_signals(observable['value'], limit)
+        signals = client.get_signals(observable['value'], client.ctr_limit)
 
         for signal in signals:
 
