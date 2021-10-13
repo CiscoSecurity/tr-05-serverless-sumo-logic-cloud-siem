@@ -33,8 +33,9 @@ def observe_observables():
     signal_sighting_map = SignalSighting()
     indicator_map = Indicator()
 
-    g.sightings = UniqueMaxStackList(100)
-    g.indicators = UniqueMaxStackList(100)
+    default_ctr_limit = current_app.config['CTR_DEFAULT_ENTITIES_LIMIT']
+    g.sightings = UniqueMaxStackList(default_ctr_limit)
+    g.indicators = UniqueMaxStackList(default_ctr_limit)
 
     for observable in observables:
         obs_value = observable['value']
