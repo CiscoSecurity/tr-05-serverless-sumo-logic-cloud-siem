@@ -15,6 +15,7 @@ from api.mapping import (
     InsightSighting,
     SignalSighting,
     Indicator,
+    Relationship,
     source_uri
 )
 
@@ -31,11 +32,13 @@ def observe_observables():
 
     insight_sighting_map = InsightSighting()
     signal_sighting_map = SignalSighting()
+    relationship_map = Relationship()
     indicator_map = Indicator()
 
     default_ctr_limit = current_app.config['CTR_DEFAULT_ENTITIES_LIMIT']
     g.sightings = UniqueMaxStackList(default_ctr_limit)
     g.indicators = UniqueMaxStackList(default_ctr_limit)
+    g.relationships = UniqueMaxStackList(default_ctr_limit)
 
     for observable in observables:
         obs_value = observable['value']
@@ -46,24 +49,44 @@ def observe_observables():
                 insight_sighting_map.extract(insight, observable)
             g.sightings.append(insight_sighting)
 
-        insights_signals = client.get_insights_signals(insights, obs_value)
+            insights_signals = client.get_insight_signals(insight, obs_value)
 
-        for signal in insights_signals:
-            signal_sighting = signal_sighting_map.extract(signal, observable)
-            g.sightings.append(signal_sighting)
+            for signal in insights_signals:
+                signal_sighting = \
+                    signal_sighting_map.extract(signal, observable)
+                g.sightings.append(signal_sighting)
 
-            indicator = indicator_map.extract(signal)
-            g.indicators.append(indicator)
+                indicator = indicator_map.extract(signal)
+                g.indicators.append(indicator)
+
+                g.relationships.append(
+                    relationship_map.extract(insight_sighting['id'],
+                                             signal_sighting['id'],
+                                             'based-on'))
+
+                g.relationships.append(
+                    relationship_map.extract(insight_sighting['id'],
+                                             indicator['id'],
+                                             'sighting-of'))
+
+                g.relationships.append(
+                    relationship_map.extract(signal_sighting['id'],
+                                             indicator['id'],
+                                             'sighting-of'))
 
         signals = client.get_signals(obs_value, client.ctr_limit)
 
         for signal in signals:
-
             signal_sighting = signal_sighting_map.extract(signal, observable)
             g.sightings.append(signal_sighting)
 
             indicator = indicator_map.extract(signal)
             g.indicators.append(indicator)
+
+            g.relationships.append(
+                relationship_map.extract(signal_sighting['id'],
+                                         indicator['id'],
+                                         'sighting-of'))
 
     return jsonify_result()
 
