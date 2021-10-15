@@ -236,7 +236,7 @@ class Indicator:
             "id": self._transient_id(signal),
             "valid_time": self._valid_time(signal),
             "external_references": self._external_references(signal),
-            "severity": signal.get("severity", "Unknown"),
+            "severity": SIGNAL_SEVERITY.get(signal.get("severity"), "Unknown"),
             "short_description": signal.get("description"),
             "source_uri": source_uri(
                 self._uri_path.format(rule_id=signal.get("ruleId"))
