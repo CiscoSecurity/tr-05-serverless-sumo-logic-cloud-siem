@@ -985,13 +985,15 @@ SIGNAL_OF_INSIGHT_SIGHTINGS = [
 
 INDICATORS = [
     {
-        "external_references": {
-            "description": "Test rule",
-            "external_id": "MATCH-U00001",
-            "source_name": "Sumo Logic Cloud SIEM Enterprise",
-            "url": "https://service.us2.sumologic.com/sec/content/rules"
-                   "/rule/MATCH-U00001"
-        },
+        "external_references": [
+            {
+                "description": "Test rule",
+                "external_id": "MATCH-U00001",
+                "source_name": "Sumo Logic Cloud SIEM Enterprise",
+                "url": "https://service.us2.sumologic.com/sec/content/rules"
+                       "/rule/MATCH-U00001"
+            }
+        ],
         "id": "indicator-9692a26b-2f2c-5deb-8178-4e359a1fe1fd",
         "producer": "Sumo Logic",
         "schema_version": "1.1.8",
@@ -1008,17 +1010,20 @@ INDICATORS = [
         }
     },
     {
-        "external_references": {
-            "description": "Test "
-                           "rule",
-            "external_id": "MATCH-U00001",
-            "source_name": "Sumo "
-                           "Logic "
-                           "Cloud "
-                           "SIEM "
-                           "Enterprise",
-            "url": "https://service.us2.sumologic."
-                   "com/sec/content/rules/rule/MATCH-U00001"},
+        "external_references": [
+            {
+                "description": "Test "
+                               "rule",
+                "external_id": "MATCH-U00001",
+                "source_name": "Sumo "
+                               "Logic "
+                               "Cloud "
+                               "SIEM "
+                               "Enterprise",
+                "url": "https://service.us2.sumologic."
+                       "com/sec/content/rules/rule/MATCH-U00001"
+            }
+        ],
         "id": "indicator-9692a26b-2f2c-5deb-8178-4e359a1fe1fd",
         "producer": "Sumo Logic",
         "schema_version": "1.1.8",
