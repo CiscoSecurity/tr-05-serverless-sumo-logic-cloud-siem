@@ -1012,14 +1012,9 @@ INDICATORS = [
     {
         "external_references": [
             {
-                "description": "Test "
-                               "rule",
+                "description": "Test rule",
                 "external_id": "MATCH-U00001",
-                "source_name": "Sumo "
-                               "Logic "
-                               "Cloud "
-                               "SIEM "
-                               "Enterprise",
+                "source_name": "Sumo Logic Cloud SIEM Enterprise",
                 "url": "https://service.us2.sumologic."
                        "com/sec/content/rules/rule/MATCH-U00001"
             }
