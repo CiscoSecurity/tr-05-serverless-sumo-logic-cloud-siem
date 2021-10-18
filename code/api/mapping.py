@@ -235,7 +235,7 @@ class Indicator:
         return {
             "id": self._transient_id(signal),
             "valid_time": self._valid_time(signal),
-            "external_references": self._external_references(signal),
+            "external_references": [self._external_references(signal)],
             "severity": SIGNAL_SEVERITY.get(signal.get("severity"), "Unknown"),
             "short_description": signal.get("description"),
             "source_uri": source_uri(
