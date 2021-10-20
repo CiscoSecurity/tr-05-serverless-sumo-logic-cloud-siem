@@ -72,8 +72,43 @@ This application was developed and tested under Python version 3.9.
 
 ### Implemented Relay Endpoints
 
-`N/A`
+- `POST /health`
+  - Verifies the Authorization Bearer JWT and decodes it to restore the original credentials.
+  - Authenticates to the underlying external service to check that provided credentials are valid and the service is available at the moment. 
+  
+- `Post /observe/observables`
+  - Accepts a list of observables.
+  - Verifies the Authorization Bearer JWT and decodes it to restore the original credentials.
+  - Makes a series of requests to the underlying external service to query for some cyber threat intelligence data on each supported observable.
+  - Maps the fetched data into appropriate CTIM entities.
+  - Returns a list per each of the following CTIM entities (if any extracted):
+      - Indicator,
+      - Sighting,
+      - Relationship
+  
+- `POST /refer/observables`
+  - Accepts a list of observables and filters out unsupported ones.
+  - Builds a search link per each supported observable to pivot back to the
+  underlying external service and look up events with the observable there.
+  - Returns a list of those links.
+  
+- `POST /version`
+  - Returns the current version of the application.
 
 ### Supported Types of Observables
 
-`N/A`
+All types allowed in [CTIM](https://github.com/threatgrid/ctim/blob/master/doc/structures/sighting.md#propertytype-observabletypeidentifierstring) 
+
+### CTIM Mapping Specifics
+
+Each response from the Sumo Logic API for the supported observables generates the following CTIM entities:
+  - `Sightings` are taken from Insights and Signals.
+  - `Indicators` are taken from Signals. 
+    
+Signals are divided into those which we retrieve from Insights, and those which we retrieve separately.
+  
+Relationships are the following: 
+  - Insight          `Sighting` -> based-on    -> Signal `Sighting`
+  - Insight          `Sighting` -> sighting-of -> Signal `Indicator`
+  - Insight's Signal `Sighting` -> sighting-of -> Signal `Indicator`
+  - Signal           `Sighting` -> sighting-of -> Signal `Indicator`
