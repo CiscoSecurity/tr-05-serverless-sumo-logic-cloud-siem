@@ -47,13 +47,13 @@ ENTITY_TYPES = {
 }
 
 CTIM_DEFAULTS = {
-    'schema_version': SCHEMA,
-    "source": SOURCE
+    'schema_version': SCHEMA
 }
 
 SIGHTING_DEFAULTS = {
     "type": SIGHTING,
     "count": 1,
+    "source": SOURCE,
     "internal": True,
     "confidence": "High",
     **CTIM_DEFAULTS
@@ -62,6 +62,7 @@ SIGHTING_DEFAULTS = {
 INDICATOR_DEFAULTS = {
     "producer": PRODUCER,
     "type": INDICATOR,
+    "source": SOURCE,
     **CTIM_DEFAULTS
 }
 
