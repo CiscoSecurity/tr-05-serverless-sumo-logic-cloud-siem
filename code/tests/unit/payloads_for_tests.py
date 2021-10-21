@@ -999,6 +999,7 @@ INDICATORS = [
         "schema_version": "1.1.8",
         "severity": "Low",
         "short_description": "Test rule",
+        "source": "Sumo Logic Cloud SIEM Enterprise",
         "source_uri": "https://service.us2.sumologic.com/sec/content/rules"
                       "/rule/MATCH-U00001",
         "tags": [
@@ -1024,6 +1025,7 @@ INDICATORS = [
         "schema_version": "1.1.8",
         "severity": "Low",
         "short_description": "Test rule",
+        "source": "Sumo Logic Cloud SIEM Enterprise",
         "source_uri": "https://service.us2.sumologic."
                       "com/sec/content/rules/rule/MATCH-U00001",
         "tags": ["Tactic"],

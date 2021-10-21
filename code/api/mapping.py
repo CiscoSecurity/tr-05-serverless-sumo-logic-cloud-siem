@@ -62,6 +62,7 @@ SIGHTING_DEFAULTS = {
 INDICATOR_DEFAULTS = {
     "producer": PRODUCER,
     "type": INDICATOR,
+    "source": SOURCE,
     **CTIM_DEFAULTS
 }
 
